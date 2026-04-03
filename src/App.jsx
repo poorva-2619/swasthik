@@ -4,6 +4,7 @@ import HealthTips from './pages/HealthTips'
 import UserProfile from './pages/UserProfile'
 import Dashboard from './pages/Dashboard'
 import SymptomCategories from './pages/SymptomCategories'
+import NearbyClinic from './pages/NearbyClinic'
 
 /* ─── Language data ─────────────────────────────────────── */
 const LANGUAGES = [
@@ -20,6 +21,30 @@ export default function App() {
   const [selectedLang, setSelectedLang] = useState('en')
   const [page, setPage] = useState('home')
   const [userProfile, setUserProfile] = useState(null)
+  const [userLocation, setUserLocation] = useState(null)
+  const [isLocating, setIsLocating] = useState(false)
+
+  const handleFindClinicWithLocation = () => {
+    setIsLocating(true)
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude })
+          setIsLocating(false)
+          setPage('nearby-clinic')
+        },
+        (error) => {
+          console.warn('Geolocation failed:', error.message)
+          setIsLocating(false)
+          setPage('nearby-clinic') // Proceed anyway and fallback to general locality/near me
+        },
+        { timeout: 10000 }
+      )
+    } else {
+      setIsLocating(false)
+      setPage('nearby-clinic')
+    }
+  }
 
   if (page === 'health-tips') {
     return <HealthTips onBack={() => setPage('home')} />
@@ -41,7 +66,17 @@ export default function App() {
         user={userProfile}
         onBack={() => setPage('user-profile')}
         onCheckSymptoms={() => setPage('symptom-categories')}
-        onNearbyClinic={() => alert('Nearby clinic finder coming soon!')}
+        onNearbyClinic={handleFindClinicWithLocation}
+      />
+    )
+  }
+
+  if (page === 'nearby-clinic') {
+    return (
+      <NearbyClinic 
+        user={userProfile} 
+        userLocation={userLocation}
+        onBack={() => setPage('dashboard')} 
       />
     )
   }
@@ -119,9 +154,9 @@ export default function App() {
           <span className="quick-icon">💡</span>
           <span className="quick-label">Health Tips</span>
         </button>
-        <button id="find-clinic-btn" className="quick-card" aria-label="Find Clinic">
-          <span className="quick-icon">🏥</span>
-          <span className="quick-label">Find Clinic</span>
+        <button id="find-clinic-btn" className="quick-card" aria-label="Find Clinic" onClick={handleFindClinicWithLocation} disabled={isLocating}>
+          <span className="quick-icon">{isLocating ? '⏳' : '🏥'}</span>
+          <span className="quick-label">{isLocating ? 'Locating...' : 'Find Clinic'}</span>
         </button>
       </div>
 

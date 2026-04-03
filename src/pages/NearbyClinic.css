@@ -1,0 +1,240 @@
+/* ── Layout & Core ────────────────────────────────────────── */
+.nc-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  gap: 20px;
+  padding-bottom: 40px;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.nc-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+
+.nc-back-btn {
+  background: #1b3a1f;
+  color: #a3ccaf;
+  border: 1px solid rgba(34,197,94,0.3);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nc-back-btn:hover {
+  background: #254a2a;
+  color: #fff;
+  border-color: rgba(34,197,94,0.5);
+}
+
+.nc-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0;
+}
+
+/* ── Sections Common ────────────────────────────────────── */
+.nc-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nc-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #71b48b;
+  text-transform: uppercase;
+  margin-left: 4px;
+  padding-bottom: 4px;
+}
+
+.nc-section-title.pinkish {
+  color: #d1758c;
+}
+
+/* ── Facilities List ────────────────────────────────────── */
+.nc-facility-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nc-facility-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px;
+  background: rgba(13, 31, 15, 0.6);
+  border: 1px solid rgba(34,197,94,0.2);
+  border-radius: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.nc-facility-card:hover {
+  background: rgba(27, 58, 31, 0.8);
+  border-color: rgba(34,197,94,0.4);
+  transform: translateY(-1px);
+}
+
+.nc-facility-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.nc-facility-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-grow: 1;
+}
+
+.nc-facility-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f8fafc;
+  line-height: 1.2;
+}
+
+.nc-facility-free-badge {
+  display: inline-flex;
+  background: rgba(34,197,94,0.15);
+  color: #4ade80;
+  border-radius: 10px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  align-self: flex-start;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(34,197,94,0.3);
+}
+
+.nc-facility-arrow {
+  color: #64748b;
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+
+.nc-facility-card:hover .nc-facility-arrow {
+  color: #4ade80;
+}
+
+/* ── Helplines Grid ─────────────────────────────────────── */
+.nc-helpline-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.nc-helpline-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 10px;
+  background: rgba(13, 31, 15, 0.6);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border-top-width: 3px;
+}
+
+.nc-helpline-card:hover {
+  background: rgba(27, 58, 31, 0.8);
+  transform: translateY(-2px);
+}
+
+/* Colors for specific helplines (from design) */
+.nc-helpline-card.border-red { border-top-color: #ef4444; }
+.nc-helpline-card.border-red-light { border-top-color: #f87171; }
+.nc-helpline-card.border-pink { border-top-color: #ec4899; }
+.nc-helpline-card.border-blue { border-top-color: #3b82f6; }
+.nc-helpline-card.border-purple { border-top-color: #a855f7; }
+.nc-helpline-card.border-indigo { border-top-color: #6366f1; }
+
+.nc-helpline-icon {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.nc-helpline-number {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 4px;
+}
+
+.nc-helpline-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #94a3b8;
+  text-align: center;
+}
+
+/* ── Did You Know Box ──────────────────────────────────── */
+.nc-dyk-box {
+  background: rgba(34,197,94,0.05);
+  border: 1px solid rgba(34,197,94,0.2);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+.nc-dyk-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #4ade80;
+  margin-bottom: 16px;
+}
+
+.nc-dyk-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nc-dyk-list li {
+  position: relative;
+  padding-left: 14px;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  line-height: 1.4;
+}
+
+.nc-dyk-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #4ade80;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.text-green-highlight {
+  color: #4ade80;
+  font-weight: 700;
+}
