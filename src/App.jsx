@@ -5,6 +5,9 @@ import UserProfile from './pages/UserProfile'
 import Dashboard from './pages/Dashboard'
 import SymptomCategories from './pages/SymptomCategories'
 import NearbyClinic from './pages/NearbyClinic'
+import Auth from './pages/Auth'
+import PatientSelection from './pages/PatientSelection'
+import PatientHistory from './pages/PatientHistory'
 
 /* ─── Language data ─────────────────────────────────────── */
 const LANGUAGES = [
@@ -20,7 +23,8 @@ const LANGUAGES = [
 export default function App() {
   const [selectedLang, setSelectedLang] = useState('en')
   const [page, setPage] = useState('home')
-  const [userProfile, setUserProfile] = useState(null)
+  const [currentUser, setCurrentUser] = useState(null)
+  const [currentPatient, setCurrentPatient] = useState(null)
   const [userLocation, setUserLocation] = useState(null)
   const [isLocating, setIsLocating] = useState(false)
 
@@ -46,16 +50,67 @@ export default function App() {
     }
   }
 
+  const handleMockDiagnosis = async (cat) => {
+    try {
+      const response = await fetch('http://localhost:3000/api/records', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          patient_id: currentPatient._id,
+          symptoms: [cat.label],
+          diagnosis_result: 'Mock Diagnosis Result for ' + cat.label
+        })
+      });
+      if(response.ok) {
+        setPage('patient-history');
+      } else {
+        const data = await response.json();
+        alert(data.error || "Failed to save record");
+      }
+    } catch(err) {
+      alert("Network Error while saving diagnosis record.");
+    }
+  };
+
   if (page === 'health-tips') {
     return <HealthTips onBack={() => setPage('home')} />
   }
 
-  if (page === 'user-profile') {
+  if (page === 'auth') {
+    return (
+      <Auth 
+        onBack={() => setPage('home')} 
+        onLogin={(user) => { setCurrentUser(user); setPage('patient-selection'); }} 
+      />
+    )
+  }
+
+  if (page === 'patient-selection') {
+    return (
+      <PatientSelection 
+        user={currentUser}
+        onBack={() => setPage('home')}
+        onAddNew={() => setPage('add-patient')}
+        onSelectPatient={(patient) => { setCurrentPatient(patient); setPage('dashboard'); }}
+      />
+    )
+  }
+
+  if (page === 'add-patient') {
     return (
       <UserProfile
-        onBack={() => setPage('home')}
-        onProceed={(data) => { setUserProfile(data); setPage('dashboard') }}
-        savedData={userProfile}
+        user={currentUser}
+        onBack={() => setPage('patient-selection')}
+        onProceed={(data) => { setCurrentPatient(data); setPage('dashboard') }}
+      />
+    )
+  }
+
+  if (page === 'patient-history') {
+    return (
+      <PatientHistory
+        patient={currentPatient}
+        onBack={() => setPage('dashboard')}
       />
     )
   }
@@ -63,10 +118,11 @@ export default function App() {
   if (page === 'dashboard') {
     return (
       <Dashboard
-        user={userProfile}
-        onBack={() => setPage('user-profile')}
+        user={currentPatient}
+        onBack={() => setPage('patient-selection')}
         onCheckSymptoms={() => setPage('symptom-categories')}
         onNearbyClinic={handleFindClinicWithLocation}
+        onHistoryClick={() => setPage('patient-history')}
       />
     )
   }
@@ -74,7 +130,7 @@ export default function App() {
   if (page === 'nearby-clinic') {
     return (
       <NearbyClinic 
-        user={userProfile} 
+        user={currentPatient} 
         userLocation={userLocation}
         onBack={() => setPage('dashboard')} 
       />
@@ -85,7 +141,7 @@ export default function App() {
     return (
       <SymptomCategories
         onBack={() => setPage('dashboard')}
-        onSelect={(cat) => alert(`${cat.label} – coming soon!`)}
+        onSelect={handleMockDiagnosis}
       />
     )
   }
@@ -142,7 +198,7 @@ export default function App() {
         id="check-symptoms-btn"
         className="cta-btn"
         aria-label="Start"
-        onClick={() => setPage('user-profile')}
+        onClick={() => setPage('auth')}
       >
         <span className="cta-icon">🩺</span>
         Start

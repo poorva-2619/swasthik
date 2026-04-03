@@ -13,7 +13,8 @@ const OCCUPATIONS = [
   'Other',
 ]
 
-export default function UserProfile({ onBack, onProceed, savedData }) {
+export default function UserProfile({ user, onBack, onProceed, savedData }) {
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState(
     savedData || {
       name: '',
@@ -40,11 +41,36 @@ export default function UserProfile({ onBack, onProceed, savedData }) {
     return e
   }
 
-  const handleProceed = () => {
-    const e = validate()
-    if (Object.keys(e).length) { setErrors(e); return }
-    onProceed(form)
-  }
+  const handleProceed = async () => {
+    const e = validate();
+    if (Object.keys(e).length) { setErrors(e); return; }
+    
+    setLoading(true);
+    try {
+      const response = await fetch('http://localhost:3000/api/patients', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contact_no: user.contact_no,
+          name: form.name,
+          age: Number(form.age),
+          gender: form.gender,
+          occupation: form.occupation,
+          locality: form.locality
+        })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        onProceed(data);
+      } else {
+        alert(data.error || 'Failed to save patient');
+      }
+    } catch (err) {
+      alert('Network error. Is backend running?');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="up-wrapper">
@@ -57,7 +83,7 @@ export default function UserProfile({ onBack, onProceed, savedData }) {
       </div>
 
       <p className="up-subtitle">
-        Help us personalise your health guidance by sharing a few details.
+        Add a new patient profile to track diagnosis history.
       </p>
 
       <div className="up-form" role="form" aria-label="User profile form">
@@ -161,10 +187,11 @@ export default function UserProfile({ onBack, onProceed, savedData }) {
         id="up-proceed-btn"
         className="up-proceed-btn"
         onClick={handleProceed}
-        aria-label="Proceed to symptom checker"
+        aria-label="Save Patient Profile"
+        disabled={loading}
       >
-        <span className="up-proceed-icon">🩺</span>
-        Proceed
+        <span className="up-proceed-icon">{loading ? '⏳' : '🩺'}</span>
+        {loading ? 'Saving...' : 'Save Profile'}
       </button>
     </div>
   )

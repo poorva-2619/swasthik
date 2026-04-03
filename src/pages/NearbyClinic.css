@@ -149,7 +149,7 @@
   justify-content: center;
   padding: 20px 10px;
   background: rgba(13, 31, 15, 0.6);
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid var(--border-card);
   border-radius: 12px;
   text-decoration: none;
   transition: all 0.2s ease;
