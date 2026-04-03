@@ -11,6 +11,9 @@ import PatientHistory from './pages/PatientHistory'
 import HeadChecker from './pages/HeadChecker'
 import MensChecker from './pages/MensChecker'
 import EyesChecker from './pages/EyesChecker'
+import BoneChecker from './pages/BoneChecker'
+import InjuryChecker from './pages/InjuryChecker'
+import CommonChecker from './pages/CommonChecker'
 /* ─── Language data ─────────────────────────────────────── */
 const LANGUAGES = [
   { code: 'en',  label: 'English',  script: 'English' },
@@ -147,8 +150,35 @@ export default function App() {
           if (cat.id === 'head') setPage('head-checker')
           else if (cat.id === 'menstruation') setPage('mens-checker')
           else if (cat.id === 'eyes') setPage('eyes-checker')
+          else if (cat.id === 'bones') setPage('bone-checker')
+          else if (cat.id === 'burns-shock') setPage('injury-checker')
+          else if (cat.id === 'common-diseases') setPage('common-checker')
           else handleMockDiagnosis(cat)
         }}
+      />
+    )
+  }
+
+  if (page === 'bone-checker') {
+    return (
+      <BoneChecker
+        onBack={() => setPage('symptom-categories')}
+      />
+    )
+  }
+
+  if (page === 'common-checker') {
+    return (
+      <CommonChecker
+        onBack={() => setPage('symptom-categories')}
+      />
+    )
+  }
+
+  if (page === 'injury-checker') {
+    return (
+      <InjuryChecker
+        onBack={() => setPage('symptom-categories')}
       />
     )
   }
