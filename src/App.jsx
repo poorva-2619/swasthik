@@ -3,6 +3,7 @@ import './App.css'
 import HealthTips from './pages/HealthTips'
 import UserProfile from './pages/UserProfile'
 import Dashboard from './pages/Dashboard'
+import SymptomCategories from './pages/SymptomCategories'
 
 /* ─── Language data ─────────────────────────────────────── */
 const LANGUAGES = [
@@ -39,8 +40,17 @@ export default function App() {
       <Dashboard
         user={userProfile}
         onBack={() => setPage('user-profile')}
-        onCheckSymptoms={() => alert('Symptom checker coming soon!')}
+        onCheckSymptoms={() => setPage('symptom-categories')}
         onNearbyClinic={() => alert('Nearby clinic finder coming soon!')}
+      />
+    )
+  }
+
+  if (page === 'symptom-categories') {
+    return (
+      <SymptomCategories
+        onBack={() => setPage('dashboard')}
+        onSelect={(cat) => alert(`${cat.label} – coming soon!`)}
       />
     )
   }
