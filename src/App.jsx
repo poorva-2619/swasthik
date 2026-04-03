@@ -10,7 +10,7 @@ import PatientSelection from './pages/PatientSelection'
 import PatientHistory from './pages/PatientHistory'
 import HeadChecker from './pages/HeadChecker'
 import MensChecker from './pages/MensChecker'
-
+import EyesChecker from './pages/EyesChecker'
 /* ─── Language data ─────────────────────────────────────── */
 const LANGUAGES = [
   { code: 'en',  label: 'English',  script: 'English' },
@@ -146,6 +146,7 @@ export default function App() {
         onSelect={(cat) => {
           if (cat.id === 'head') setPage('head-checker')
           else if (cat.id === 'menstruation') setPage('mens-checker')
+          else if (cat.id === 'eyes') setPage('eyes-checker')
           else handleMockDiagnosis(cat)
         }}
       />
@@ -163,6 +164,14 @@ export default function App() {
   if (page === 'mens-checker') {
     return (
       <MensChecker
+        onBack={() => setPage('symptom-categories')}
+      />
+    )
+  }
+
+  if (page === 'eyes-checker') {
+    return (
+      <EyesChecker
         onBack={() => setPage('symptom-categories')}
       />
     )
