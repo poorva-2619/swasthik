@@ -12,6 +12,7 @@ import HeadChecker from './pages/HeadChecker'
 import MensChecker from './pages/MensChecker'
 import BoneChecker from './pages/BoneChecker'
 import InjuryChecker from './pages/InjuryChecker'
+import CommonChecker from './pages/CommonChecker'
 
 /* ─── Language data ─────────────────────────────────────── */
 const LANGUAGES = [
@@ -150,6 +151,7 @@ export default function App() {
           else if (cat.id === 'menstruation') setPage('mens-checker')
           else if (cat.id === 'bones') setPage('bone-checker')
           else if (cat.id === 'burns-shock') setPage('injury-checker')
+          else if (cat.id === 'common-diseases') setPage('common-checker')
           else handleMockDiagnosis(cat)
         }}
       />
@@ -159,6 +161,14 @@ export default function App() {
   if (page === 'bone-checker') {
     return (
       <BoneChecker
+        onBack={() => setPage('symptom-categories')}
+      />
+    )
+  }
+
+  if (page === 'common-checker') {
+    return (
+      <CommonChecker
         onBack={() => setPage('symptom-categories')}
       />
     )

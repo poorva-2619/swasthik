@@ -1,0 +1,260 @@
+/* =========================================================
+   CommonChecker.css – Slide-by-slide symptom quiz + result
+   Accent colour: #ef4444 (red)
+   ========================================================= */
+
+.cc-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100dvh;
+  padding: 24px 16px 48px;
+  background:
+    radial-gradient(ellipse 80% 45% at 50% -8%, rgba(239,68,68,0.12) 0%, transparent 68%),
+    var(--bg-primary);
+}
+
+.cc-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 20px;
+}
+
+.cc-back-btn {
+  background: transparent;
+  border: 1px solid var(--border-card);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.cc-back-btn:hover {
+  border-color: #ef4444;
+  color: var(--text-primary);
+  background: rgba(239,68,68,0.08);
+}
+
+.cc-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ef4444;
+  text-shadow: 0 0 20px rgba(239,68,68,0.4);
+}
+
+.cc-progress-wrap {
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 28px;
+}
+
+.cc-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.cc-progress-track {
+  width: 100%;
+  height: 5px;
+  background: var(--border-card);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.cc-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #b91c1c, #ef4444, #fca5a5);
+  box-shadow: 0 0 10px rgba(239,68,68,0.45);
+  transition: width 0.4s ease;
+}
+
+.cc-card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--bg-card);
+  border: 1px solid #7f1d1d;
+  border-radius: var(--radius-lg);
+  padding: 28px 24px 24px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+  animation: cc-slide-in 0.35s ease both;
+}
+
+@keyframes cc-slide-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0);    }
+}
+
+.cc-symptom-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.25);
+  color: #ef4444;
+  font-size: 0.65rem;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.cc-question {
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 28px;
+}
+
+.cc-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.cc-choice-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-card);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cc-choice-icon { font-size: 1.8rem; margin-bottom: 4px; }
+
+.cc-choice-btn.yes:hover, .cc-choice-btn.yes.selected {
+  border-color: #ef4444;
+  background: rgba(239,68,68,0.08);
+  color: #fca5a5;
+}
+
+.cc-choice-btn.no:hover, .cc-choice-btn.no.selected {
+  border-color: var(--green-primary);
+  background: rgba(34,197,94,0.08);
+  color: var(--green-primary);
+}
+
+.cc-nav {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 480px;
+  margin-top: 20px;
+  gap: 12px;
+}
+
+.cc-nav-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-card);
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.cc-next-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #b91c1c, #ef4444);
+  color: #fff;
+  font-weight: 700;
+}
+
+.cc-dots { display: flex; gap: 8px; margin-top: 16px; }
+.cc-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border-card); }
+.cc-dot.current { width: 20px; border-radius: 10px; background: #ef4444; }
+.cc-dot.answered { background: rgba(239,68,68,0.4); }
+
+/* ── Result Page ───────────────────────────────────────── */
+.cc-result-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px 64px;
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse 80% 45% at 50% -8%, rgba(239,68,68,0.12) 0%, transparent 68%),
+    var(--bg-primary);
+}
+
+.cc-result-header { width: 100%; max-width: 480px; display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+
+.cc-warning-box {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  gap: 14px;
+  margin-bottom: 20px;
+  animation: cc-pulse-border 2s infinite ease-in-out;
+}
+
+@keyframes cc-pulse-border {
+  0%, 100% { border-color: rgba(239, 68, 68, 0.35); }
+  50% { border-color: rgba(239, 68, 68, 0.7); box-shadow: 0 0 16px rgba(239, 68, 68, 0.2); }
+}
+
+.cc-warning-icon { font-size: 1.8rem; }
+.cc-warning-title { font-size: 0.8rem; font-weight: 800; color: #f87171; letter-spacing: 0.08em; margin-bottom: 4px; }
+.cc-warning-desc { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); line-height: 1.4; }
+
+.cc-result-card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--bg-card);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 20px;
+}
+
+.cc-result-label { font-size: 0.65rem; font-weight: 700; color: #ef4444; text-transform: uppercase; margin-bottom: 8px; }
+.cc-result-disease { font-size: 1.55rem; font-weight: 700; margin-bottom: 6px; }
+
+.cc-severity-chip { padding: 4px 12px; border-radius: var(--radius-pill); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; display: inline-block; margin-bottom: 20px; }
+.cc-severity-chip.mild { background: rgba(34, 197, 94, 0.12); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+.cc-severity-chip.moderate { background: rgba(251, 191, 36, 0.12); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); }
+.cc-severity-chip.serious { background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); }
+.cc-severity-chip.critical { background: rgba(220,38,38,0.2); color: #fca5a5; border: 1px solid rgba(220,38,38,0.45); animation: cc-pulse-text 2s infinite; }
+
+@keyframes cc-pulse-text {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.cc-divider { height: 1px; background: var(--border-card); margin: 20px 0; }
+
+.cc-remedy-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
+.cc-remedy-list { list-style: none; padding: 0; margin: 0; }
+.cc-remedy-item { position: relative; padding-left: 20px; font-size: 0.9rem; line-height: 1.6; margin-bottom: 8px; color: var(--text-primary); opacity: 0.9; }
+.cc-remedy-item::before { content: '•'; position: absolute; left: 0; color: #ef4444; font-weight: 900; }
+
+.cc-symptom-summary { width: 100%; max-width: 480px; margin-bottom: 24px; }
+.cc-symptom-summary-title { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
+.cc-symptom-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.cc-symptom-pill { padding: 4px 12px; border-radius: var(--radius-pill); font-size: 0.75rem; font-weight: 600; }
+.cc-symptom-pill.present { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
+.cc-symptom-pill.absent { background: transparent; border: 1px solid var(--border-card); color: var(--text-muted); opacity: 0.5; }
+
+.cc-result-actions { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 12px; }
+.cc-restart-btn { padding: 14px; border-radius: var(--radius-md); border: 1px solid rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.08); color: #fca5a5; font-weight: 700; }
+.cc-home-btn { padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-card); background: transparent; color: var(--text-muted); }
