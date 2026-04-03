@@ -97,6 +97,12 @@
   box-shadow: 0 10px 32px rgba(0,0,0,0.45), 0 0 20px rgba(59,130,246,0.12);
 }
 
+.db-card--amber:hover {
+  transform: translateY(-4px);
+  border-color: rgba(245,158,11,0.45);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.45), 0 0 20px rgba(245,158,11,0.12);
+}
+
 .db-card:active {
   transform: translateY(-1px);
 }
@@ -117,9 +123,11 @@
 
 .db-card--green:hover .db-card-glow--green { opacity: 0.26; }
 .db-card--blue:hover  .db-card-glow--blue  { opacity: 0.26; }
+.db-card--amber:hover .db-card-glow--amber { opacity: 0.26; }
 
 .db-card-glow--green { background: #22c55e; }
 .db-card-glow--blue  { background: #3b82f6; }
+.db-card-glow--amber { background: #f59e0b; }
 
 /* ── Icon ────────────────────────────────────────────────── */
 .db-card-icon {
@@ -156,6 +164,7 @@
 
 .db-card-bar--green { background: linear-gradient(90deg, #22c55e, #16a34a); }
 .db-card-bar--blue  { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+.db-card-bar--amber { background: linear-gradient(90deg, #f59e0b, #d97706); }
 
 /* ── User Summary Pill ───────────────────────────────────── */
 .db-user-pill {

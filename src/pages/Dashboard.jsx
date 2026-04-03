@@ -51,17 +51,18 @@ export default function Dashboard({ user, onBack, onCheckSymptoms, onNearbyClini
 
         {/* Card 3 - History */}
         <button
-          className="db-card"
+          id="db-history-btn"
+          className="db-card db-card--amber"
           onClick={onHistoryClick}
           aria-label="View Patient History"
-          style={{ '--card-accent': '#f59e0b' }}
         >
-          <div className="db-card-glow db-card-glow--yellow" aria-hidden="true" style={{ background: 'radial-gradient(circle at top right, rgba(245, 158, 11, 0.15), transparent 70%)' }} />
+          <div className="db-card-glow db-card-glow--amber" aria-hidden="true" />
           <span className="db-card-icon" aria-hidden="true">📜</span>
           <h2 className="db-card-title">View History</h2>
           <p className="db-card-desc">
             Check your previous diagnoses and symptoms.
           </p>
+          <div className="db-card-bar db-card-bar--amber" aria-hidden="true" />
         </button>
 
       </div>
