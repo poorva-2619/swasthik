@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import HealthTips from './pages/HealthTips'
+import UserProfile from './pages/UserProfile'
 
 /* ─── Language data ─────────────────────────────────────── */
 const LANGUAGES = [
@@ -16,9 +17,20 @@ const LANGUAGES = [
 export default function App() {
   const [selectedLang, setSelectedLang] = useState('en')
   const [page, setPage] = useState('home')
+  const [userProfile, setUserProfile] = useState(null)
 
   if (page === 'health-tips') {
     return <HealthTips onBack={() => setPage('home')} />
+  }
+
+  if (page === 'user-profile') {
+    return (
+      <UserProfile
+        onBack={() => setPage('home')}
+        onProceed={(data) => { setUserProfile(data); setPage('home') }}
+        savedData={userProfile}
+      />
+    )
   }
 
   return (
@@ -73,6 +85,7 @@ export default function App() {
         id="check-symptoms-btn"
         className="cta-btn"
         aria-label="Check symptoms"
+        onClick={() => setPage('user-profile')}
       >
         <span className="cta-icon">🩺</span>
         Check Symptoms

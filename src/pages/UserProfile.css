@@ -1,0 +1,259 @@
+/* =========================================================
+   UserProfile.css – Profile form page styles
+   ========================================================= */
+
+.up-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 16px 48px;
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(34,197,94,0.08) 0%, transparent 70%),
+    var(--bg-primary);
+}
+
+/* ── Header ───────────────────────────────────────────── */
+.up-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 440px;
+  margin-bottom: 6px;
+}
+
+.up-back-btn {
+  background: transparent;
+  border: 1px solid var(--border-card);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.up-back-btn:hover {
+  border-color: var(--green-primary);
+  color: var(--text-primary);
+  background: rgba(34,197,94,0.06);
+}
+
+.up-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--green-primary);
+  text-shadow: 0 0 20px rgba(34,197,94,0.35);
+  letter-spacing: -0.3px;
+}
+
+.up-subtitle {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-align: center;
+  max-width: 320px;
+  line-height: 1.55;
+  margin-bottom: 24px;
+}
+
+/* ── Form Container ───────────────────────────────────── */
+.up-form {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Individual Field ─────────────────────────────────── */
+.up-field {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition);
+}
+
+.up-field:focus-within {
+  border-color: rgba(34,197,94,0.4);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(34,197,94,0.12);
+}
+
+/* ── Label ────────────────────────────────────────────── */
+.up-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.up-label-icon {
+  font-size: 0.85rem;
+}
+
+/* ── Text / Number Input ──────────────────────────────── */
+.up-input {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.92rem;
+  font-family: inherit;
+  padding: 10px 14px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.up-input::placeholder {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.up-input:focus {
+  border-color: var(--green-primary);
+  background: rgba(34,197,94,0.04);
+  box-shadow: 0 0 0 2px rgba(34,197,94,0.12);
+}
+
+.up-input--error {
+  border-color: rgba(239,68,68,0.6) !important;
+}
+
+/* remove spinner arrows on number input */
+.up-input[type=number]::-webkit-outer-spin-button,
+.up-input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+.up-input[type=number] { -moz-appearance: textfield; }
+
+/* ── Select ───────────────────────────────────────────── */
+.up-select {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.92rem;
+  font-family: inherit;
+  padding: 10px 14px;
+  outline: none;
+  transition: var(--transition);
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b8c72' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  cursor: pointer;
+}
+
+.up-select option {
+  background: #111f13;
+  color: var(--text-primary);
+}
+
+.up-select:focus {
+  border-color: var(--green-primary);
+  background-color: rgba(34,197,94,0.04);
+  box-shadow: 0 0 0 2px rgba(34,197,94,0.12);
+}
+
+/* ── Gender Pill Buttons ──────────────────────────────── */
+.up-pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.up-pill {
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-card);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 500;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.up-pill:hover {
+  border-color: var(--green-primary);
+  color: var(--text-primary);
+  background: rgba(34,197,94,0.06);
+}
+
+.up-pill--active {
+  background: var(--green-primary);
+  border-color: var(--green-primary);
+  color: #0a1a0c;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(34,197,94,0.35);
+}
+
+.up-pill--err {
+  border-color: rgba(239,68,68,0.5);
+}
+
+/* ── Error Text ───────────────────────────────────────── */
+.up-error {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.72rem;
+  color: #fca5a5;
+  letter-spacing: 0.01em;
+}
+
+/* ── Proceed Button ───────────────────────────────────── */
+.up-proceed-btn {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 24px;
+  margin-top: 24px;
+  border-radius: var(--radius-xl);
+  border: none;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #0a1a0c;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 20px rgba(34,197,94,0.35), 0 1px 0 rgba(255,255,255,0.1) inset;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.up-proceed-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.up-proceed-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px rgba(34,197,94,0.45);
+}
+
+.up-proceed-btn:hover::after { opacity: 1; }
+.up-proceed-btn:active { transform: translateY(0); }
+
+.up-proceed-icon { font-size: 1.1rem; }
+
+/* ── Responsive ───────────────────────────────────────── */
+@media (max-width: 360px) {
+  .up-title { font-size: 1.25rem; }
+  .up-pill   { padding: 6px 12px; font-size: 0.78rem; }
+}
