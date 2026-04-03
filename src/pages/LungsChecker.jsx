@@ -2,18 +2,6 @@ import { useState } from 'react'
 import './LungsChecker.css'
 import { SYMPTOMS, predictDisease } from './lungsModel'
 
-/* ── Severity metadata per predicted disease ─────────────── */
-const SEVERITY = {
-  'No Issue':              { level: 'mild',     label: '✓ Healthy' },
-  'Mild Issue':            { level: 'mild',     label: '✓ Mild Issue' },
-  'Common Cold':           { level: 'mild',     label: '✓ Mild' },
-  'Bronchitis':            { level: 'moderate', label: '⚠ Moderate' },
-  'Asthma':                { level: 'moderate', label: '⚠ Moderate (Care Needed)' },
-  'Pneumonia':             { level: 'serious',  label: '🚨 Serious – See Doctor' },
-  'Possible TB':           { level: 'serious',  label: '🚨 URGENT – Get Tested' },
-  'Severe Lung Infection': { level: 'serious',  label: '🚨 EMERGENCY' },
-}
-
 /* ── Icons shown on Yes / No buttons ────────────────────── */
 const YES_ICON = '✓'
 const NO_ICON  = '✗'
@@ -32,16 +20,16 @@ function ResultScreen({ answers, onRestart, onBack }) {
           <button className="lc-back-btn" onClick={onBack} aria-label="Go back">
             ← Back
           </button>
-          <span className="lc-title">Lungs Checker</span>
+          <span className="lc-title">Lung Health</span>
         </div>
 
         <div className="lc-result-card" style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '2.8rem', marginBottom: '14px' }}>🫁</div>
-          <div className="lc-result-disease">No Symptoms Detected</div>
-          <div className="lc-divider" />
+          <div className="lc-result-disease">Condition: Healthy</div>
+          <div className="cc-divider" />
           <p className="lc-remedy-text">
-            You haven't reported any significant lung or breathing symptoms. That's great!
-            Maintain good hygiene, avoid pollution when possible, and stay active.
+            No respiratory symptoms detected. Your lungs seem to be in good shape! 
+            Maintain a smoke-free environment and practice deep breathing.
           </p>
         </div>
 
@@ -58,8 +46,7 @@ function ResultScreen({ answers, onRestart, onBack }) {
   }
 
   /* ── Standard result ───────────────────────────────────── */
-  const { disease, remedy } = predictDisease(answers)
-  const sev = SEVERITY[disease] ?? { level: 'moderate', label: '⚠ Moderate' }
+  const { disease, remedies, severity, severityLabel, criticalWarning, managementLabel } = predictDisease(answers)
   const presentSymptoms = SYMPTOMS.filter((_, i) => answers[i] === 1)
   const absentSymptoms  = SYMPTOMS.filter((_, i) => answers[i] === 0)
 
@@ -71,29 +58,47 @@ function ResultScreen({ answers, onRestart, onBack }) {
         <button className="lc-back-btn" onClick={onBack} aria-label="Go back">
           ← Back
         </button>
-        <span className="lc-title">Your Result</span>
+        <span className="lc-title">Assessment Result</span>
       </div>
+
+       {/* Critical Warning (if any) */}
+       {criticalWarning && (
+        <div className="lc-warning-box">
+          <span className="lc-warning-icon">🚨</span>
+          <div className="lc-warning-content">
+            <h4 className="lc-warning-title">MEDICAL WARNING</h4>
+            <p className="lc-warning-desc">{criticalWarning}</p>
+          </div>
+        </div>
+      )}
 
       {/* Diagnosis card */}
       <div className="lc-result-card">
-        <div className="lc-result-label">Possible Condition</div>
+        <div className="lc-result-label">Potential Condition</div>
         <div className="lc-result-disease">{disease}</div>
 
         {/* Severity chip */}
-        <span className={`lc-severity-chip ${sev.level}`}>
-          {sev.label}
+        <span className={`lc-severity-chip ${severity}`}>
+          {severityLabel}
         </span>
 
         <div className="lc-divider" />
 
-        {/* Remedy */}
-        <div className="lc-remedy-label">Suggested Action</div>
-        <p className="lc-remedy-text" style={{ whiteSpace: 'pre-line' }}>{remedy}</p>
+        {/* Labels based on category */}
+        {managementLabel && <div className="lc-meta-label">📋 {managementLabel}</div>}
+
+        {/* Remedy List */}
+        <div className="lc-remedy-label">Essential Actions</div>
+        <ul className="lc-remedy-list">
+          {remedies.map((r, i) => (
+            <li key={i} className="lc-remedy-item">{r}</li>
+          ))}
+        </ul>
       </div>
 
       {/* Symptom summary */}
       <div className="lc-symptom-summary">
-        <div className="lc-symptom-summary-title">Your Symptoms</div>
+        <div className="lc-symptom-summary-title">Summary of Symptoms</div>
         <div className="lc-symptom-pills">
           {presentSymptoms.map(s => (
             <span key={s} className="lc-symptom-pill present">{s}</span>
@@ -119,16 +124,14 @@ function ResultScreen({ answers, onRestart, onBack }) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   QUIZ SCREEN  (one symptom slide at a time)
+   QUIZ SCREEN ──────────────────────────────────────────────
    ═══════════════════════════════════════════════════════════ */
 export default function LungsChecker({ onBack }) {
   const total = SYMPTOMS.length
 
-  // answers[i] = null (not yet answered) | 0 (No) | 1 (Yes)
   const [answers, setAnswers]     = useState(Array(total).fill(null))
   const [step, setStep]           = useState(0)
   const [showResult, setShowResult] = useState(false)
-  // slideKey forces CSS re-animation when slide changes
   const [slideKey, setSlideKey]   = useState(0)
 
   /* ── Handlers ──────────────────────────────────────────── */
@@ -145,8 +148,6 @@ export default function LungsChecker({ onBack }) {
       setStep(s => s + 1)
       setSlideKey(k => k + 1)
     } else {
-      // Final slide → show result
-      // Any remaining null treated as 0 (no symptom)
       setAnswers(prev => prev.map(a => (a === null ? 0 : a)))
       setShowResult(true)
     }
@@ -166,7 +167,6 @@ export default function LungsChecker({ onBack }) {
     setShowResult(false)
   }
 
-  /* ── Result screen ─────────────────────────────────────── */
   if (showResult) {
     const finalAnswers = answers.map(a => (a === null ? 0 : a))
     return (
@@ -178,8 +178,7 @@ export default function LungsChecker({ onBack }) {
     )
   }
 
-  /* ── Quiz screen ───────────────────────────────────────── */
-  const current     = answers[step]           // null | 0 | 1
+  const current     = answers[step]
   const canProceed  = current !== null
   const isLastSlide = step === total - 1
   const progress    = ((step + (canProceed ? 1 : 0)) / total) * 100
@@ -187,59 +186,48 @@ export default function LungsChecker({ onBack }) {
   return (
     <div className="lc-wrapper">
 
-      {/* Header */}
       <div className="lc-header">
         <button
           className="lc-back-btn"
           onClick={step === 0 ? onBack : goPrev}
-          aria-label={step === 0 ? 'Back to categories' : 'Previous question'}
+          aria-label={step === 0 ? 'Back' : 'Previous question'}
         >
           ← {step === 0 ? 'Back' : 'Prev'}
         </button>
-        <span className="lc-title">Lungs Checker</span>
+        <span className="lc-title">Lung Health</span>
       </div>
 
-      {/* Progress bar */}
-      <div className="lc-progress-wrap" role="progressbar"
-           aria-valuenow={step + 1} aria-valuemin={1} aria-valuemax={total}>
+      <div className="lc-progress-wrap" role="progressbar">
         <div className="lc-progress-label">
           <span>Question {step + 1} of {total}</span>
-          <span>{Math.round(progress)}% complete</span>
+          <span>{Math.round(progress)}% Complete</span>
         </div>
         <div className="lc-progress-track">
           <div className="lc-progress-fill" style={{ width: `${progress}%` }} />
         </div>
       </div>
 
-      {/* Question card — key re-mounts on every slide change to replay animation */}
       <div className="lc-card" key={slideKey}>
-        {/* Symptom badge */}
         <div className="lc-symptom-badge">
-          🫁 Lungs · Symptom {step + 1}
+          🫁 Lungs · Item {step + 1}
         </div>
 
-        {/* Question */}
         <p className="lc-question">
-          Do you have <strong>{SYMPTOMS[step]}</strong>?
+          Is there any <strong>{SYMPTOMS[step]}</strong>?
         </p>
 
-        {/* Yes / No */}
         <div className="lc-choices">
           <button
-            id={`lc-yes-${step}`}
             className={`lc-choice-btn yes${current === 1 ? ' selected' : ''}`}
             onClick={() => handleChoice(1)}
-            aria-pressed={current === 1}
           >
             <span className="lc-choice-icon">{YES_ICON}</span>
             Yes
           </button>
 
           <button
-            id={`lc-no-${step}`}
             className={`lc-choice-btn no${current === 0 ? ' selected' : ''}`}
             onClick={() => handleChoice(0)}
-            aria-pressed={current === 0}
           >
             <span className="lc-choice-icon">{NO_ICON}</span>
             No
@@ -247,35 +235,23 @@ export default function LungsChecker({ onBack }) {
         </div>
       </div>
 
-      {/* Bottom nav */}
       <div className="lc-nav">
-        <button
-          className="lc-nav-btn"
-          onClick={goPrev}
-          disabled={step === 0}
-          aria-label="Previous question"
-        >
+        <button className="lc-nav-btn" onClick={goPrev} disabled={step === 0}>
           ← Prev
         </button>
 
-        <button
-          className="lc-next-btn"
-          onClick={goNext}
-          disabled={!canProceed}
-          aria-label={isLastSlide ? 'See results' : 'Next question'}
-        >
-          {isLastSlide ? 'See Results →' : 'Next →'}
+        <button className="lc-next-btn" onClick={goNext} disabled={!canProceed}>
+          {isLastSlide ? 'Get Result →' : 'Next →'}
         </button>
       </div>
 
-      {/* Dot indicators */}
-      <div className="lc-dots" aria-hidden="true">
+      <div className="lc-dots">
         {Array.from({ length: total }).map((_, i) => (
           <span
             key={i}
             className={
               'lc-dot' +
-              (i === step        ? ' current'  : '') +
+              (i === step ? ' current' : '') +
               (answers[i] !== null && i !== step ? ' answered' : '')
             }
           />

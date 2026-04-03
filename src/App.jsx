@@ -20,6 +20,11 @@ import SkinChecker from './pages/SkinChecker'
 import BoneChecker from './pages/BoneChecker'
 import InjuryChecker from './pages/InjuryChecker'
 import CommonChecker from './pages/CommonChecker'
+<<<<<<< HEAD
+=======
+import LungsChecker from './pages/LungsChecker'
+
+>>>>>>> b40b586 (Feat: Complete Lungs Health Assessment module)
 /* ─── Language data ─────────────────────────────────────── */
 const LANGUAGES = [
   { code: 'en',  label: 'English',  script: 'English' },
@@ -160,11 +165,14 @@ export default function App() {
           else if (cat.id === 'burns-shock') setPage('injury-checker')
           else if (cat.id === 'common-diseases') setPage('common-checker')
           else if (cat.id === 'lungs') setPage('lungs-checker')
+<<<<<<< HEAD
           else if (cat.id === 'stomach') setPage('stomach-checker')
           else if (cat.id === 'allergy') setPage('allergy-checker')
           else if (cat.id === 'heart') setPage('heart-checker')
           else if (cat.id === 'nose') setPage('nose-checker')
           else if (cat.id === 'skin') setPage('skin-checker')
+=======
+>>>>>>> b40b586 (Feat: Complete Lungs Health Assessment module)
           else handleMockDiagnosis(cat)
         }}
       />
@@ -182,6 +190,14 @@ export default function App() {
   if (page === 'common-checker') {
     return (
       <CommonChecker
+        onBack={() => setPage('symptom-categories')}
+      />
+    )
+  }
+
+  if (page === 'lungs-checker') {
+    return (
+      <LungsChecker
         onBack={() => setPage('symptom-categories')}
       />
     )
