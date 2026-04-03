@@ -8,6 +8,7 @@ import NearbyClinic from './pages/NearbyClinic'
 import Auth from './pages/Auth'
 import PatientSelection from './pages/PatientSelection'
 import PatientHistory from './pages/PatientHistory'
+import HeadChecker from './pages/HeadChecker'
 
 /* ─── Language data ─────────────────────────────────────── */
 const LANGUAGES = [
@@ -141,7 +142,18 @@ export default function App() {
     return (
       <SymptomCategories
         onBack={() => setPage('dashboard')}
-        onSelect={handleMockDiagnosis}
+        onSelect={(cat) => {
+          if (cat.id === 'head') setPage('head-checker')
+          else handleMockDiagnosis(cat)
+        }}
+      />
+    )
+  }
+
+  if (page === 'head-checker') {
+    return (
+      <HeadChecker
+        onBack={() => setPage('symptom-categories')}
       />
     )
   }
