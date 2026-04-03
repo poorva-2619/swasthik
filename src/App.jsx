@@ -12,6 +12,8 @@ import HeadChecker from './pages/HeadChecker'
 import MensChecker from './pages/MensChecker'
 import EyesChecker from './pages/EyesChecker'
 import LungsChecker from './pages/LungsChecker'
+import StomachChecker from './pages/StomachChecker'
+import AllergyChecker from './pages/AllergyChecker'
 import BoneChecker from './pages/BoneChecker'
 import InjuryChecker from './pages/InjuryChecker'
 import CommonChecker from './pages/CommonChecker'
@@ -155,6 +157,8 @@ export default function App() {
           else if (cat.id === 'burns-shock') setPage('injury-checker')
           else if (cat.id === 'common-diseases') setPage('common-checker')
           else if (cat.id === 'lungs') setPage('lungs-checker')
+          else if (cat.id === 'stomach') setPage('stomach-checker')
+          else if (cat.id === 'allergy') setPage('allergy-checker')
           else handleMockDiagnosis(cat)
         }}
       />
@@ -212,6 +216,22 @@ export default function App() {
   if (page === 'lungs-checker') {
     return (
       <LungsChecker
+        onBack={() => setPage('symptom-categories')}
+      />
+    )
+  }
+
+  if (page === 'stomach-checker') {
+    return (
+      <StomachChecker
+        onBack={() => setPage('symptom-categories')}
+      />
+    )
+  }
+
+  if (page === 'allergy-checker') {
+    return (
+      <AllergyChecker
         onBack={() => setPage('symptom-categories')}
       />
     )

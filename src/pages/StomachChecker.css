@@ -1,0 +1,524 @@
+/* =========================================================
+   StomachChecker.css – Slide-by-slide symptom quiz + result
+   Accent colour: #eab308 (yellow) — Stomach section identity
+   ========================================================= */
+
+/* ── Page wrapper ──────────────────────────────────────── */
+.stc-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100dvh;
+  padding: 24px 16px 48px;
+  background:
+    radial-gradient(ellipse 80% 45% at 50% -8%, rgba(234,179,8,0.10) 0%, transparent 68%),
+    var(--bg-primary);
+}
+
+/* ── Header ────────────────────────────────────────────── */
+.stc-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 20px;
+}
+
+.stc-back-btn {
+  background: transparent;
+  border: 1px solid var(--border-card);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  transition: var(--transition);
+  white-space: nowrap;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+
+.stc-back-btn:hover {
+  border-color: #eab308;
+  color: var(--text-primary);
+  background: rgba(234,179,8,0.08);
+}
+
+.stc-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #eab308;
+  text-shadow: 0 0 20px rgba(234,179,8,0.4);
+  letter-spacing: -0.3px;
+}
+
+/* ── Progress bar ──────────────────────────────────────── */
+.stc-progress-wrap {
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 28px;
+}
+
+.stc-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.stc-progress-track {
+  width: 100%;
+  height: 5px;
+  background: var(--border-card);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.stc-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ca8a04, #eab308, #fef08a);
+  border-radius: var(--radius-pill);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(234,179,8,0.45);
+}
+
+/* ── Question card ─────────────────────────────────────── */
+.stc-card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--bg-card);
+  border: 1px solid #713f12;           
+  border-radius: var(--radius-lg);
+  padding: 28px 24px 24px;
+  box-shadow:
+    var(--shadow-card),
+    0 0 0 1px rgba(234,179,8,0.06);
+  position: relative;
+  overflow: hidden;
+
+  /* Slide-in animation */
+  animation: stc-slide-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes stc-slide-in {
+  from { opacity: 0; transform: translateX(28px); }
+  to   { opacity: 1; transform: translateX(0);    }
+}
+
+/* Corner glow blob */
+.stc-card::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: #eab308;
+  filter: blur(42px);
+  opacity: 0.09;
+  pointer-events: none;
+}
+
+/* Symptom badge above question */
+.stc-symptom-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(234,179,8,0.12);
+  border: 1px solid rgba(234,179,8,0.25);
+  color: #facc15;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+/* Question text */
+.stc-question {
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.45;
+  margin-bottom: 28px;
+}
+
+/* ── Yes / No buttons ──────────────────────────────────── */
+.stc-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.stc-choice-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 18px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-card);
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+
+.stc-choice-btn .stc-choice-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+/* Yes = yellow accent */
+.stc-choice-btn.yes:hover,
+.stc-choice-btn.yes.selected {
+  background: rgba(234,179,8,0.14);
+  border-color: #eab308;
+  color: #fef08a;
+  box-shadow: 0 0 16px rgba(234,179,8,0.25);
+  transform: translateY(-2px);
+}
+
+/* No = neutral/green accent */
+.stc-choice-btn.no:hover,
+.stc-choice-btn.no.selected {
+  background: rgba(34,197,94,0.10);
+  border-color: var(--green-primary);
+  color: var(--green-primary);
+  box-shadow: 0 0 14px rgba(34,197,94,0.18);
+  transform: translateY(-2px);
+}
+
+/* ── Navigation row ────────────────────────────────────── */
+.stc-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 480px;
+  margin-top: 18px;
+  gap: 12px;
+}
+
+.stc-nav-btn {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-card);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.stc-nav-btn:hover:not(:disabled) {
+  border-color: #eab308;
+  color: var(--text-primary);
+  background: rgba(234,179,8,0.08);
+}
+
+.stc-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.stc-next-btn {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: var(--radius-md);
+  border: none;
+  background: linear-gradient(135deg, #ca8a04, #eab308);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(234,179,8,0.35);
+}
+
+.stc-next-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(234,179,8,0.48);
+}
+
+.stc-next-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Dot indicators ────────────────────────────────────── */
+.stc-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.stc-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border-card);
+  transition: all 0.25s ease;
+}
+
+.stc-dot.answered {
+  background: rgba(234,179,8,0.45);
+}
+
+.stc-dot.current {
+  width: 18px;
+  border-radius: var(--radius-pill);
+  background: #eab308;
+  box-shadow: 0 0 8px rgba(234,179,8,0.55);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RESULT PAGE
+   ═══════════════════════════════════════════════════════════ */
+
+.stc-result-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100dvh;
+  padding: 24px 16px 52px;
+  background:
+    radial-gradient(ellipse 80% 45% at 50% -8%, rgba(234,179,8,0.12) 0%, transparent 68%),
+    var(--bg-primary);
+  animation: stc-fade-up 0.4s ease both;
+}
+
+@keyframes stc-fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* Result header */
+.stc-result-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 24px;
+}
+
+/* Diagnosis card */
+.stc-result-card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--bg-card);
+  border: 1px solid rgba(234,179,8,0.22);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  box-shadow:
+    var(--shadow-card),
+    0 0 32px rgba(234,179,8,0.10);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.stc-result-card::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: #eab308;
+  filter: blur(60px);
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+/* "Diagnosis" label */
+.stc-result-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #eab308;
+  margin-bottom: 8px;
+}
+
+/* Disease name */
+.stc-result-disease {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 4px;
+  letter-spacing: -0.3px;
+}
+
+/* Severity chip – varies per severity prop */
+.stc-severity-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.stc-severity-chip.mild {
+  background: rgba(34,197,94,0.12);
+  border: 1px solid rgba(34,197,94,0.3);
+  color: #4ade80;
+}
+
+.stc-severity-chip.moderate {
+  background: rgba(251,191,36,0.12);
+  border: 1px solid rgba(251,191,36,0.3);
+  color: #fbbf24;
+}
+
+.stc-severity-chip.serious {
+  background: rgba(239,68,68,0.12);
+  border: 1px solid rgba(239,68,68,0.35);
+  color: #f87171;
+}
+
+/* Divider */
+.stc-divider {
+  height: 1px;
+  background: var(--border-card);
+  margin: 18px 0;
+}
+
+/* Remedy section */
+.stc-remedy-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.stc-remedy-text {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  line-height: 1.65;
+  opacity: 0.88;
+}
+
+/* Symptoms summary pill row */
+.stc-symptom-summary {
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 14px;
+}
+
+.stc-symptom-summary-title {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.stc-symptom-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.stc-symptom-pill {
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.stc-symptom-pill.present {
+  background: rgba(234,179,8,0.14);
+  border: 1px solid rgba(234,179,8,0.3);
+  color: #facc15;
+}
+
+.stc-symptom-pill.absent {
+  background: transparent;
+  border: 1px solid var(--border-card);
+  color: var(--text-muted);
+  opacity: 0.55;
+}
+
+/* Action buttons */
+.stc-result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 480px;
+  margin-top: 4px;
+}
+
+.stc-restart-btn {
+  width: 100%;
+  padding: 13px 0;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(234,179,8,0.35);
+  background: rgba(234,179,8,0.08);
+  color: #facc15;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.stc-restart-btn:hover {
+  background: rgba(234,179,8,0.16);
+  border-color: #eab308;
+  box-shadow: 0 0 16px rgba(234,179,8,0.25);
+}
+
+.stc-home-btn {
+  width: 100%;
+  padding: 13px 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-card);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.stc-home-btn:hover {
+  border-color: var(--green-primary);
+  color: var(--green-primary);
+  background: rgba(34,197,94,0.06);
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 400px) {
+  .stc-question  { font-size: 1rem; }
+  .stc-card      { padding: 22px 18px 20px; }
+  .stc-choices   { gap: 9px; }
+  .stc-result-disease { font-size: 1.3rem; }
+}
