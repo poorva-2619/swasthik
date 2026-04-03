@@ -10,6 +10,7 @@ import PatientSelection from './pages/PatientSelection'
 import PatientHistory from './pages/PatientHistory'
 import HeadChecker from './pages/HeadChecker'
 import MensChecker from './pages/MensChecker'
+import BoneChecker from './pages/BoneChecker'
 
 /* ─── Language data ─────────────────────────────────────── */
 const LANGUAGES = [
@@ -146,8 +147,17 @@ export default function App() {
         onSelect={(cat) => {
           if (cat.id === 'head') setPage('head-checker')
           else if (cat.id === 'menstruation') setPage('mens-checker')
+          else if (cat.id === 'bones') setPage('bone-checker')
           else handleMockDiagnosis(cat)
         }}
+      />
+    )
+  }
+
+  if (page === 'bone-checker') {
+    return (
+      <BoneChecker
+        onBack={() => setPage('symptom-categories')}
       />
     )
   }
