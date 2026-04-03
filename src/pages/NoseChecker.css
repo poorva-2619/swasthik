@@ -1,0 +1,524 @@
+/* =========================================================
+   NoseChecker.css – Slide-by-slide symptom quiz + result
+   Accent colour: #06b6d4 (cyan) — Nose section identity
+   ========================================================= */
+
+/* ── Page wrapper ──────────────────────────────────────── */
+.nc-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100dvh;
+  padding: 24px 16px 48px;
+  background:
+    radial-gradient(ellipse 80% 45% at 50% -8%, rgba(6,182,212,0.10) 0%, transparent 68%),
+    var(--bg-primary);
+}
+
+/* ── Header ────────────────────────────────────────────── */
+.nc-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 20px;
+}
+
+.nc-back-btn {
+  background: transparent;
+  border: 1px solid var(--border-card);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  transition: var(--transition);
+  white-space: nowrap;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+
+.nc-back-btn:hover {
+  border-color: #06b6d4;
+  color: var(--text-primary);
+  background: rgba(6,182,212,0.08);
+}
+
+.nc-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #06b6d4;
+  text-shadow: 0 0 20px rgba(6,182,212,0.4);
+  letter-spacing: -0.3px;
+}
+
+/* ── Progress bar ──────────────────────────────────────── */
+.nc-progress-wrap {
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 28px;
+}
+
+.nc-progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.nc-progress-track {
+  width: 100%;
+  height: 5px;
+  background: var(--border-card);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.nc-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0891b2, #06b6d4, #a5f3fc);
+  border-radius: var(--radius-pill);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(6,182,212,0.45);
+}
+
+/* ── Question card ─────────────────────────────────────── */
+.nc-card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--bg-card);
+  border: 1px solid #164e63;           
+  border-radius: var(--radius-lg);
+  padding: 28px 24px 24px;
+  box-shadow:
+    var(--shadow-card),
+    0 0 0 1px rgba(6,182,212,0.06);
+  position: relative;
+  overflow: hidden;
+
+  /* Slide-in animation */
+  animation: nc-slide-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes nc-slide-in {
+  from { opacity: 0; transform: translateX(28px); }
+  to   { opacity: 1; transform: translateX(0);    }
+}
+
+/* Corner glow blob */
+.nc-card::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: #06b6d4;
+  filter: blur(42px);
+  opacity: 0.09;
+  pointer-events: none;
+}
+
+/* Symptom badge above question */
+.nc-symptom-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(6,182,212,0.12);
+  border: 1px solid rgba(6,182,212,0.25);
+  color: #22d3ee;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+/* Question text */
+.nc-question {
+  font-size: 1.12rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.45;
+  margin-bottom: 28px;
+}
+
+/* ── Yes / No buttons ──────────────────────────────────── */
+.nc-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.nc-choice-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 18px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-card);
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+
+.nc-choice-btn .nc-choice-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+/* Yes = cyan accent */
+.nc-choice-btn.yes:hover,
+.nc-choice-btn.yes.selected {
+  background: rgba(6,182,212,0.14);
+  border-color: #06b6d4;
+  color: #a5f3fc;
+  box-shadow: 0 0 16px rgba(6,182,212,0.25);
+  transform: translateY(-2px);
+}
+
+/* No = neutral/green accent */
+.nc-choice-btn.no:hover,
+.nc-choice-btn.no.selected {
+  background: rgba(34,197,94,0.10);
+  border-color: var(--green-primary);
+  color: var(--green-primary);
+  box-shadow: 0 0 14px rgba(34,197,94,0.18);
+  transform: translateY(-2px);
+}
+
+/* ── Navigation row ────────────────────────────────────── */
+.nc-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 480px;
+  margin-top: 18px;
+  gap: 12px;
+}
+
+.nc-nav-btn {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-card);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.nc-nav-btn:hover:not(:disabled) {
+  border-color: #06b6d4;
+  color: var(--text-primary);
+  background: rgba(6,182,212,0.08);
+}
+
+.nc-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.nc-next-btn {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: var(--radius-md);
+  border: none;
+  background: linear-gradient(135deg, #0891b2, #06b6d4);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(6,182,212,0.35);
+}
+
+.nc-next-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(6,182,212,0.48);
+}
+
+.nc-next-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Dot indicators ────────────────────────────────────── */
+.nc-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.nc-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border-card);
+  transition: all 0.25s ease;
+}
+
+.nc-dot.answered {
+  background: rgba(6,182,212,0.45);
+}
+
+.nc-dot.current {
+  width: 18px;
+  border-radius: var(--radius-pill);
+  background: #06b6d4;
+  box-shadow: 0 0 8px rgba(6,182,212,0.55);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RESULT PAGE
+   ═══════════════════════════════════════════════════════════ */
+
+.nc-result-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100dvh;
+  padding: 24px 16px 52px;
+  background:
+    radial-gradient(ellipse 80% 45% at 50% -8%, rgba(6,182,212,0.12) 0%, transparent 68%),
+    var(--bg-primary);
+  animation: nc-fade-up 0.4s ease both;
+}
+
+@keyframes nc-fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* Result header */
+.nc-result-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 24px;
+}
+
+/* Diagnosis card */
+.nc-result-card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--bg-card);
+  border: 1px solid rgba(6,182,212,0.22);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  box-shadow:
+    var(--shadow-card),
+    0 0 32px rgba(6,182,212,0.10);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.nc-result-card::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: #06b6d4;
+  filter: blur(60px);
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+/* "Diagnosis" label */
+.nc-result-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #06b6d4;
+  margin-bottom: 8px;
+}
+
+/* Disease name */
+.nc-result-disease {
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 4px;
+  letter-spacing: -0.3px;
+}
+
+/* Severity chip – varies per severity prop */
+.nc-severity-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.nc-severity-chip.mild {
+  background: rgba(34,197,94,0.12);
+  border: 1px solid rgba(34,197,94,0.3);
+  color: #4ade80;
+}
+
+.nc-severity-chip.moderate {
+  background: rgba(251,191,36,0.12);
+  border: 1px solid rgba(251,191,36,0.3);
+  color: #fbbf24;
+}
+
+.nc-severity-chip.serious {
+  background: rgba(239,68,68,0.12);
+  border: 1px solid rgba(239,68,68,0.35);
+  color: #f87171;
+}
+
+/* Divider */
+.nc-divider {
+  height: 1px;
+  background: var(--border-card);
+  margin: 18px 0;
+}
+
+/* Remedy section */
+.nc-remedy-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.nc-remedy-text {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  line-height: 1.65;
+  opacity: 0.88;
+}
+
+/* Symptoms summary pill row */
+.nc-symptom-summary {
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 14px;
+}
+
+.nc-symptom-summary-title {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.nc-symptom-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.nc-symptom-pill {
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.nc-symptom-pill.present {
+  background: rgba(6,182,212,0.14);
+  border: 1px solid rgba(6,182,212,0.3);
+  color: #22d3ee;
+}
+
+.nc-symptom-pill.absent {
+  background: transparent;
+  border: 1px solid var(--border-card);
+  color: var(--text-muted);
+  opacity: 0.55;
+}
+
+/* Action buttons */
+.nc-result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 480px;
+  margin-top: 4px;
+}
+
+.nc-restart-btn {
+  width: 100%;
+  padding: 13px 0;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(6,182,212,0.35);
+  background: rgba(6,182,212,0.08);
+  color: #22d3ee;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.nc-restart-btn:hover {
+  background: rgba(6,182,212,0.16);
+  border-color: #06b6d4;
+  box-shadow: 0 0 16px rgba(6,182,212,0.25);
+}
+
+.nc-home-btn {
+  width: 100%;
+  padding: 13px 0;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-card);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.nc-home-btn:hover {
+  border-color: var(--green-primary);
+  color: var(--green-primary);
+  background: rgba(34,197,94,0.06);
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 400px) {
+  .nc-question  { font-size: 1rem; }
+  .nc-card      { padding: 22px 18px 20px; }
+  .nc-choices   { gap: 9px; }
+  .nc-result-disease { font-size: 1.3rem; }
+}
