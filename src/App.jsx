@@ -14,6 +14,7 @@ import EyesChecker from './pages/EyesChecker'
 import LungsChecker from './pages/LungsChecker'
 import StomachChecker from './pages/StomachChecker'
 import AllergyChecker from './pages/AllergyChecker'
+import HeartChecker from './pages/HeartChecker'
 import BoneChecker from './pages/BoneChecker'
 import InjuryChecker from './pages/InjuryChecker'
 import CommonChecker from './pages/CommonChecker'
@@ -159,6 +160,7 @@ export default function App() {
           else if (cat.id === 'lungs') setPage('lungs-checker')
           else if (cat.id === 'stomach') setPage('stomach-checker')
           else if (cat.id === 'allergy') setPage('allergy-checker')
+          else if (cat.id === 'heart') setPage('heart-checker')
           else handleMockDiagnosis(cat)
         }}
       />
@@ -232,6 +234,14 @@ export default function App() {
   if (page === 'allergy-checker') {
     return (
       <AllergyChecker
+        onBack={() => setPage('symptom-categories')}
+      />
+    )
+  }
+
+  if (page === 'heart-checker') {
+    return (
+      <HeartChecker
         onBack={() => setPage('symptom-categories')}
       />
     )
