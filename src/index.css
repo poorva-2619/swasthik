@@ -1,0 +1,71 @@
+/* =========================================================
+   SWASTH – Design System
+   ========================================================= */
+
+:root {
+  /* Color palette */
+  --bg-primary:     #0a1a0c;
+  --bg-secondary:   #0f2211;
+  --bg-card:        #111f13;
+  --bg-card-hover:  #162619;
+  --border-card:    #1e3a22;
+  --green-primary:  #22c55e;
+  --green-dark:     #16a34a;
+  --green-glow:     rgba(34, 197, 94, 0.25);
+  --green-badge:    #14532d;
+  --text-primary:   #e2f5e9;
+  --text-muted:     #6b8c72;
+  --text-dim:       #4a7550;
+  --red-emergency:  #991b1b;
+  --red-hover:      #b91c1c;
+  --amber-tip:      #d97706;
+  --radius-sm:      8px;
+  --radius-md:      12px;
+  --radius-lg:      20px;
+  --radius-xl:      28px;
+  --radius-pill:    999px;
+  --shadow-card:    0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-glow:    0 0 20px rgba(34, 197, 94, 0.2);
+  --transition:     all 0.2s ease;
+  --font-sans:      'Inter', sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100dvh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border-card); border-radius: 4px; }
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--green-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+button { cursor: pointer; font-family: inherit; }

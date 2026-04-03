@@ -1,0 +1,189 @@
+/* =========================================================
+   HealthTips.css
+   ========================================================= */
+
+.ht-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px 48px;
+  min-height: 100dvh;
+  width: 100%;
+  background:
+    radial-gradient(ellipse 80% 40% at 50% -5%, rgba(34,197,94,0.06) 0%, transparent 65%),
+    var(--bg-primary);
+  animation: ht-fadein 0.25s ease;
+}
+
+@keyframes ht-fadein {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.ht-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 440px;
+  margin-bottom: 20px;
+}
+
+.ht-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-card);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.ht-back-btn:hover {
+  border-color: var(--green-primary);
+  color: var(--green-primary);
+  background: rgba(34,197,94,0.06);
+}
+
+.ht-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+/* ── Tips Grid ───────────────────────────────────────────── */
+.ht-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 440px;
+  margin-bottom: 24px;
+}
+
+.ht-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 16px 12px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition);
+  cursor: default;
+}
+
+.ht-card:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.ht-card-icon {
+  font-size: 1.8rem;
+  line-height: 1;
+  margin-bottom: 2px;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.1));
+}
+
+.ht-card-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.ht-card-desc {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+/* Colored bottom accent bar */
+.ht-card-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--tip-accent, var(--green-primary));
+  opacity: 0.85;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+/* ── Seasonal Precautions ────────────────────────────────── */
+.ht-seasonal {
+  width: 100%;
+  max-width: 440px;
+}
+
+.ht-seasonal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.ht-season-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ht-season-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-card);
+  transition: var(--transition);
+}
+
+.ht-season-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(34,197,94,0.2);
+}
+
+.ht-season-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.ht-season-icon { font-size: 0.75rem; }
+
+.ht-season-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--green-primary);
+}
+
+.ht-season-tips {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 360px) {
+  .ht-card-icon { font-size: 1.5rem; }
+  .ht-card-title { font-size: 0.75rem; }
+  .ht-card-desc  { font-size: 0.65rem; }
+}
