@@ -46,7 +46,7 @@ function ResultScreen({ answers, onRestart, onBack }) {
   }
 
   /* ── Standard result ───────────────────────────────────── */
-  const { disease, remedy, severity, severityLabel } = predictDisease(answers)
+  const { disease, remedies, severity, severityLabel, criticalWarning, cprSteps } = predictDisease(answers)
   const presentSymptoms = SYMPTOMS.filter((_, i) => answers[i] === 1)
   const absentSymptoms  = SYMPTOMS.filter((_, i) => answers[i] === 0)
 
@@ -61,6 +61,17 @@ function ResultScreen({ answers, onRestart, onBack }) {
         <span className="ic-title">Assessment Result</span>
       </div>
 
+      {/* Critical Warning (if any) */}
+      {criticalWarning && (
+        <div className="ic-warning-box">
+          <span className="ic-warning-icon">🚨</span>
+          <div className="ic-warning-content">
+            <h4 className="ic-warning-title">CRITICAL WARNING</h4>
+            <p className="ic-warning-desc">{criticalWarning}</p>
+          </div>
+        </div>
+      )}
+
       {/* Diagnosis card */}
       <div className="ic-result-card">
         <div className="ic-result-label">Potential Condition</div>
@@ -73,10 +84,29 @@ function ResultScreen({ answers, onRestart, onBack }) {
 
         <div className="ic-divider" />
 
-        {/* Remedy */}
-        <div className="ic-remedy-label">Recommended First Aid</div>
-        <p className="ic-remedy-text">{remedy}</p>
+        {/* Remedy List */}
+        <div className="ic-remedy-label">Essential First Aid</div>
+        <ul className="ic-remedy-list">
+          {remedies.map((r, i) => (
+            <li key={i} className="ic-remedy-item">{r}</li>
+          ))}
+        </ul>
       </div>
+
+      {/* CPR Basic Guide (if any) */}
+      {cprSteps && (
+        <div className="ic-cpr-box">
+          <div className="ic-cpr-header">
+            <span className="ic-cpr-icon">👐</span>
+            <span className="ic-cpr-title">CPR BASIC GUIDE</span>
+          </div>
+          <ol className="ic-cpr-list">
+            {cprSteps.map((step, i) => (
+              <li key={i} className="ic-cpr-step">{step}</li>
+            ))}
+          </ol>
+        </div>
+      )}
 
       {/* Symptom summary */}
       <div className="ic-symptom-summary">
@@ -106,7 +136,7 @@ function ResultScreen({ answers, onRestart, onBack }) {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   QUIZ SCREEN ──────────────────────────────────────────────
+   QUIZ SCREEN  ──────────────────────────────────────────────
    ═══════════════════════════════════════════════════════════ */
 export default function InjuryChecker({ onBack }) {
   const total = SYMPTOMS.length
@@ -182,7 +212,7 @@ export default function InjuryChecker({ onBack }) {
       <div className="ic-progress-wrap" role="progressbar">
         <div className="ic-progress-label">
           <span>Question {step + 1} of {total}</span>
-          <span>{Math.round(progress)}% Complete</span>
+          <span>{Math.round(progress)}%</span>
         </div>
         <div className="ic-progress-track">
           <div className="ic-progress-fill" style={{ width: `${progress}%` }} />
@@ -191,7 +221,7 @@ export default function InjuryChecker({ onBack }) {
 
       <div className="ic-card" key={slideKey}>
         <div className="ic-symptom-badge">
-          ⚡ Burns & Shock · Symptom {step + 1}
+          ⚡ Burns & Shock · Step {step + 1}
         </div>
 
         <p className="ic-question">
@@ -223,7 +253,7 @@ export default function InjuryChecker({ onBack }) {
         </button>
 
         <button className="ic-next-btn" onClick={goNext} disabled={!canProceed}>
-          {isLastSlide ? 'View Results →' : 'Next →'}
+          {isLastSlide ? 'Get Result →' : 'Next →'}
         </button>
       </div>
 

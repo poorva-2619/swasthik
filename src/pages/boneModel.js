@@ -13,7 +13,6 @@ export const SYMPTOMS = [
 ]
 
 /* ── 2. Training dataset ───────────────────────────────── */
-// Features: [pain, swelling, deformity, difficulty_moving, weak_bones, numbness]
 export const X = [
   [1, 1, 1, 1, 0, 0], // Index 0: Fracture
   [1, 1, 0, 1, 0, 1], // Index 1: Dislocation
@@ -36,47 +35,90 @@ export const y = [
   'Vitamin D Deficiency'
 ]
 
-/* ── 3. Remedies & Severities ─────────────────────────── */
+/* ── 3. Dataset Metadata (Remedies, Warnings) ──────────── */
 export const DATA_META = {
   'Fracture': {
     severity: 'serious',
     severityLabel: '🚨 Serious',
-    remedy: 'Keep the area immobilized and seek medical attention immediately. Do not try to move the bone yourself.'
-  },
-  'Dislocation': {
-    severity: 'serious',
-    severityLabel: '🚨 Serious',
-    remedy: 'Do not attempt to push the joint back into place. Immobilize the area and go to an emergency room.'
-  },
-  'Osteoporosis': {
-    severity: 'moderate',
-    severityLabel: '⚠ Moderate',
-    remedy: 'Ensure adequate calcium and vitamin D intake. Consult a doctor for bone density testing and weight-bearing exercise recommendations.'
+    remedies: [
+      "Do NOT move the affected area",
+      "Immobilize using splint or support",
+      "Apply ice (do not press hard)",
+      "Seek IMMEDIATE medical help"
+    ],
+    criticalWarning: "EMERGENCY WARNING: Potential bone break detected."
   },
   'Severe Fracture': {
     severity: 'critical',
     severityLabel: '🆘 Critical',
-    remedy: 'Immobilize the area and call for an ambulance immediately. Do not move the affected part at all.'
-  },
-  'Arthritis': {
-    severity: 'moderate',
-    severityLabel: '⚠ Moderate',
-    remedy: 'Apply warm or cold compresses to the affected joint. Gentle stretching and over-the-counter anti-inflammatories can help. See a doctor for a long-term plan.'
-  },
-  'Nerve Compression': {
-    severity: 'moderate',
-    severityLabel: '⚠ Moderate',
-    remedy: 'Rest the affected area and avoid repetitive motions. Physiotherapy or ergonomic adjustments may be needed. Consult a specialist if numbness persists.'
+    remedies: [
+      "Do NOT move the affected area",
+      "Immobilize using splint or support",
+      "Apply ice (do not press hard)",
+      "Seek IMMEDIATE medical help"
+    ],
+    criticalWarning: "EMERGENCY WARNING: Severe bone injury. Do not move."
   },
   'Spinal Injury': {
     severity: 'critical',
     severityLabel: '🆘 Extremely Critical',
-    remedy: 'Do NOT move the person. Call 108/112 immediately. Any movement could cause permanent paralysis. Remain still until help arrives.'
+    remedies: [
+      "Do NOT move the person",
+      "Immobilize using splint or support",
+      "Apply ice (do not press hard)",
+      "Seek IMMEDIATE medical help"
+    ],
+    criticalWarning: "EMERGENCY WARNING: Potential spinal cord injury. DO NOT MOVE."
+  },
+  'Dislocation': {
+    severity: 'serious',
+    severityLabel: '🚨 Serious',
+    remedies: [
+      "Do NOT try to fix it yourself",
+      "Keep joint still",
+      "Go to hospital ASAP"
+    ],
+    urgentCare: "URGENT CARE NEEDED"
+  },
+  'Osteoporosis': {
+    severity: 'moderate',
+    severityLabel: '⚠️ Moderate',
+    remedies: [
+      "Increase calcium & Vitamin D intake",
+      "Avoid falls",
+      "Consult doctor for bone density test"
+    ],
+    cautionLabel: "CAUTION"
+  },
+  'Arthritis': {
+    severity: 'moderate',
+    severityLabel: '⚠️ Moderate',
+    remedies: [
+      "Use pain relief gel (like Volini)",
+      "Do light exercise",
+      "Warm compress helps"
+    ],
+    managementLabel: "MANAGEMENT"
+  },
+  'Nerve Compression': {
+    severity: 'moderate',
+    severityLabel: '⚠️ Moderate',
+    remedies: [
+      "Avoid pressure on affected area",
+      "Maintain posture",
+      "If pain persists → doctor"
+    ],
+    attentionLabel: "ATTENTION"
   },
   'Vitamin D Deficiency': {
     severity: 'mild',
     severityLabel: '✓ Mild',
-    remedy: 'Take vitamin D supplements as advised by a healthcare professional. Spend time in safe sunlight and eat vitamin D-rich foods.'
+    remedies: [
+      "Sunlight exposure (15–20 mins daily)",
+      "Take Vitamin D supplements",
+      "Milk, eggs, fish"
+    ],
+    remedyLabel: "REMEDY"
   }
 }
 
@@ -103,17 +145,20 @@ export function predictDisease(userInput) {
     }
   })
 
-  // If multiple exact matches, we might show both or prioritize the more severe one
-  // For simplicity and alignment with user request, we take the best one.
-  // In the case of Severe Fracture vs Spinal Injury (indices 3 and 6), they are both critical.
   const bestIndex = possibleIndices[0]
   const disease = y[bestIndex]
   const meta = DATA_META[disease]
 
   return { 
     disease, 
-    remedy: meta.remedy, 
+    remedies: meta.remedies || ["Consult a doctor for accurate diagnosis."], 
     severity: meta.severity, 
-    severityLabel: meta.severityLabel 
+    severityLabel: meta.severityLabel,
+    criticalWarning: meta.criticalWarning || null,
+    urgentCare: meta.urgentCare || null,
+    cautionLabel: meta.cautionLabel || null,
+    managementLabel: meta.managementLabel || null,
+    attentionLabel: meta.attentionLabel || null,
+    remedyLabel: meta.remedyLabel || null
   }
 }

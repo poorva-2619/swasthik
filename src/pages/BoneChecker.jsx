@@ -46,7 +46,11 @@ function ResultScreen({ answers, onRestart, onBack }) {
   }
 
   /* ── Standard result ───────────────────────────────────── */
-  const { disease, remedy, severity, severityLabel } = predictDisease(answers)
+  const { 
+    disease, remedies, severity, severityLabel, 
+    criticalWarning, urgentCare, cautionLabel, 
+    managementLabel, attentionLabel, remedyLabel 
+  } = predictDisease(answers)
   const presentSymptoms = SYMPTOMS.filter((_, i) => answers[i] === 1)
   const absentSymptoms  = SYMPTOMS.filter((_, i) => answers[i] === 0)
 
@@ -61,6 +65,17 @@ function ResultScreen({ answers, onRestart, onBack }) {
         <span className="bc-title">Your Result</span>
       </div>
 
+      {/* Critical Warning (if any) */}
+      {criticalWarning && (
+        <div className="bc-warning-box">
+          <span className="bc-warning-icon">🚨</span>
+          <div className="bc-warning-content">
+            <h4 className="bc-warning-title">EMERGENCY WARNING</h4>
+            <p className="bc-warning-desc">{criticalWarning}</p>
+          </div>
+        </div>
+      )}
+
       {/* Diagnosis card */}
       <div className="bc-result-card">
         <div className="bc-result-label">Possible Condition</div>
@@ -73,9 +88,20 @@ function ResultScreen({ answers, onRestart, onBack }) {
 
         <div className="bc-divider" />
 
-        {/* Remedy */}
-        <div className="bc-remedy-label">Suggested Action</div>
-        <p className="bc-remedy-text">{remedy}</p>
+        {/* Labels based on category */}
+        {urgentCare && <div className="bc-meta-label urgent">💊 {urgentCare}</div>}
+        {cautionLabel && <div className="bc-meta-label caution">⚠️ {cautionLabel}</div>}
+        {managementLabel && <div className="bc-meta-label management">📋 {managementLabel}</div>}
+        {attentionLabel && <div className="bc-meta-label attention">🔍 {attentionLabel}</div>}
+        {remedyLabel && <div className="bc-meta-label remedy">🌿 {remedyLabel}</div>}
+
+        {/* Remedies */}
+        <div className="bc-remedy-label">Suggested Actions</div>
+        <ul className="bc-remedy-list">
+          {remedies.map((r, i) => (
+            <li key={i} className="bc-remedy-item">{r}</li>
+          ))}
+        </ul>
       </div>
 
       {/* Symptom summary */}

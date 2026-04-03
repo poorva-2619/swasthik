@@ -14,7 +14,6 @@ export const SYMPTOMS = [
 ]
 
 /* ── 2. Training dataset ───────────────────────────────── */
-// Features: [electric_contact, burning_skin, blisters, pain, unconscious, breathing_issue, redness]
 export const X = [
   [1, 0, 0, 1, 0, 0, 0], // Index 0: Mild Electric Shock
   [1, 1, 1, 1, 1, 1, 0], // Index 1: Severe Electric Shock
@@ -41,42 +40,83 @@ export const y = [
   'Mild Issue'
 ]
 
-/* ── 3. Remedies & Severities ─────────────────────────── */
+/* ── 3. Dataset Metadata (Remedies, Warnings, CPR) ─────── */
 export const DATA_META = {
   'Mild Electric Shock': {
     severity: 'moderate',
     severityLabel: '⚠️ Moderate',
-    remedy: 'Stay away from the electric source. Keep an eye on any pain or muscle stiffness. Rest and drink fluids. See a doctor if you feel chest pain or dizziness.'
+    remedies: [
+      "Turn off power source BEFORE touching person",
+      "Check for injuries",
+      "Let person rest",
+      "Consult doctor if symptoms persist"
+    ]
   },
   'Severe Electric Shock': {
     severity: 'critical',
     severityLabel: '🆘 Extremely Critical',
-    remedy: 'DO NOT touch the person directly while still in contact with the source. Use non-conductive materials (wood/plastic) to move them. Call 108/112 immediately. Check for breathing and pulse.'
+    remedies: [
+      "DO NOT touch directly if still connected",
+      "Turn off electricity immediately",
+      "Check breathing and pulse",
+      "Start CPR if needed",
+      "Call emergency services immediately"
+    ],
+    criticalWarning: "Life-threatening condition! Immediate medical help required.",
+    cprSteps: [
+      "Check responsiveness",
+      "Call for help",
+      "Start chest compressions (100-120/min)",
+      "Push hard and fast in center of chest"
+    ]
   },
   'Minor Burn': {
     severity: 'mild',
     severityLabel: '✓ Mild',
-    remedy: 'Hold the burnt area under cool (not cold) running water for 10-15 minutes. Apply aloe vera or a mild burn ointment. Keep the area clean and covered with a sterile bandage.'
+    remedies: [
+      "Cool burn under running water (10-15 mins)",
+      "Do NOT apply ice directly",
+      "Apply burn cream (like Burnol)",
+      "Cover with clean cloth"
+    ]
   },
   'Moderate Burn': {
     severity: 'moderate',
     severityLabel: '⚠️ Moderate',
-    remedy: 'Cool the area. Avoid breaking blisters. Apply a sterile dressing. Consult a doctor for proper dressing and to prevent infection.'
+    remedies: [
+      "Cool with water immediately",
+      "Do NOT burst blisters",
+      "Apply antiseptic/burn cream",
+      "Seek medical help if needed"
+    ]
   },
   'Severe Burn': {
     severity: 'critical',
     severityLabel: '🆘 Critical',
-    remedy: 'Call emergency services (108/112) immediately. Do not remove burnt clothing. Cover wounds with a cool, moist sterile cloth or bandage. Elevate the burnt area above the heart.'
+    remedies: [
+      "EMERGENCY - Life threatening",
+      "Do NOT remove stuck clothing",
+      "Cover with clean cloth",
+      "Do NOT apply creams/oil",
+      "Go to hospital immediately"
+    ],
+    criticalWarning: "Life-threatening condition! Immediate medical help required."
   },
   'No Major Issue': {
     severity: 'mild',
     severityLabel: '✓ Mild',
-    remedy: 'No severe symptoms detected. However, if pain persists or redness spreads, please consult a local clinic.'
+    remedies: [
+      "Monitor condition",
+      "Basic care sufficient"
+    ]
   },
   'Mild Issue': {
     severity: 'mild',
     severityLabel: '✓ Mild',
-    remedy: 'Symptoms appear minimal. Maintain basic hygiene of the area. Observe for changes over the next few hours.'
+    remedies: [
+      "Rest",
+      "Observe symptoms"
+    ]
   }
 }
 
@@ -114,8 +154,10 @@ export function predictDisease(userInput) {
 
   return {
     disease,
-    remedy: meta.remedy,
+    remedies: meta.remedies || ["Consult a doctor if symptoms persist."],
     severity: meta.severity,
-    severityLabel: meta.severityLabel
+    severityLabel: meta.severityLabel,
+    criticalWarning: meta.criticalWarning || null,
+    cprSteps: meta.cprSteps || null
   }
 }
