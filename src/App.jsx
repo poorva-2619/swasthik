@@ -96,11 +96,11 @@ export default function App() {
       <button
         id="check-symptoms-btn"
         className="cta-btn"
-        aria-label="Check symptoms"
+        aria-label="Start"
         onClick={() => setPage('user-profile')}
       >
         <span className="cta-icon">🩺</span>
-        Check Symptoms
+        Start
       </button>
 
       {/* ── Quick Actions ─────────────────────────────────── */}
