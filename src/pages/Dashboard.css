@@ -1,0 +1,193 @@
+/* =========================================================
+   Dashboard.css – Post-profile action cards page
+   ========================================================= */
+
+.db-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 48px;
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(34,197,94,0.09) 0%, transparent 70%),
+    var(--bg-primary);
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+.db-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 460px;
+  margin-bottom: 4px;
+}
+
+.db-back-btn {
+  background: transparent;
+  border: 1px solid var(--border-card);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.db-back-btn:hover {
+  border-color: var(--green-primary);
+  color: var(--text-primary);
+  background: rgba(34,197,94,0.06);
+}
+
+.db-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--green-primary);
+  text-shadow: 0 0 22px rgba(34,197,94,0.35);
+  letter-spacing: -0.3px;
+}
+
+.db-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+/* ── Cards Grid ───────────────────────────────────────────── */
+.db-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  width: 100%;
+  max-width: 460px;
+}
+
+/* ── Individual Card ──────────────────────────────────────── */
+.db-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 28px 18px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+/* Hover lift */
+.db-card--green:hover {
+  transform: translateY(-4px);
+  border-color: rgba(34,197,94,0.45);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.45), 0 0 20px rgba(34,197,94,0.12);
+}
+
+.db-card--blue:hover {
+  transform: translateY(-4px);
+  border-color: rgba(59,130,246,0.45);
+  box-shadow: 0 10px 32px rgba(0,0,0,0.45), 0 0 20px rgba(59,130,246,0.12);
+}
+
+.db-card:active {
+  transform: translateY(-1px);
+}
+
+/* ── Background glow blobs ───────────────────────────────── */
+.db-card-glow {
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  filter: blur(38px);
+  opacity: 0.14;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+
+.db-card--green:hover .db-card-glow--green { opacity: 0.26; }
+.db-card--blue:hover  .db-card-glow--blue  { opacity: 0.26; }
+
+.db-card-glow--green { background: #22c55e; }
+.db-card-glow--blue  { background: #3b82f6; }
+
+/* ── Icon ────────────────────────────────────────────────── */
+.db-card-icon {
+  font-size: 2.4rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+}
+
+/* ── Title ───────────────────────────────────────────────── */
+.db-card-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+  line-height: 1.2;
+}
+
+/* ── Description ─────────────────────────────────────────── */
+.db-card-desc {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+/* ── Accent Bar (bottom) ─────────────────────────────────── */
+.db-card-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.db-card-bar--green { background: linear-gradient(90deg, #22c55e, #16a34a); }
+.db-card-bar--blue  { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+
+/* ── User Summary Pill ───────────────────────────────────── */
+.db-user-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 32px;
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-card);
+  background: rgba(34,197,94,0.04);
+  max-width: 460px;
+  width: 100%;
+}
+
+.db-user-avatar {
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.db-user-info {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 360px) {
+  .db-grid           { grid-template-columns: 1fr; }
+  .db-card-icon      { font-size: 2rem; }
+  .db-card-title     { font-size: 0.9rem; }
+}

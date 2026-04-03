@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import HealthTips from './pages/HealthTips'
 import UserProfile from './pages/UserProfile'
+import Dashboard from './pages/Dashboard'
 
 /* ─── Language data ─────────────────────────────────────── */
 const LANGUAGES = [
@@ -27,8 +28,19 @@ export default function App() {
     return (
       <UserProfile
         onBack={() => setPage('home')}
-        onProceed={(data) => { setUserProfile(data); setPage('home') }}
+        onProceed={(data) => { setUserProfile(data); setPage('dashboard') }}
         savedData={userProfile}
+      />
+    )
+  }
+
+  if (page === 'dashboard') {
+    return (
+      <Dashboard
+        user={userProfile}
+        onBack={() => setPage('user-profile')}
+        onCheckSymptoms={() => alert('Symptom checker coming soon!')}
+        onNearbyClinic={() => alert('Nearby clinic finder coming soon!')}
       />
     )
   }
