@@ -1,95 +1,131 @@
 /* =========================================================
-   lungsModel.js – Lungs-section symptom engine (JS port)
-   Replaces Python's DecisionTreeClassifier with a nearest-
-   neighbour classifier based on Hamming distance.
+   lungsModel.js – Lungs symptom engine
    ========================================================= */
 
+/* ── 1. Symptoms list ──────────────────────────────────── */
 export const SYMPTOMS = [
-    "a Cough", 
-    "a Fever", 
-    "Shortness of Breath", 
-    "Chest Pain", 
-    "Mucus or Phlegm", 
-    "a Cough lasting more than 2 weeks", 
-    "Unexplained Weight Loss", 
-    "a History of Smoking"
+  'Persistent cough',
+  'Fever',
+  'Shortness of breath',
+  'Chest pain',
+  'Cough with mucus or phlegm',
+  'Cough for more than 2 weeks',
+  'Unexplained weight loss',
+  'History of smoking'
 ]
 
+/* ── 2. Training dataset ───────────────────────────────── */
+// Features: [cough, fever, short_breath, chest_pain, mucus, long_cough, weight_loss, smoking_history]
 export const X = [
-    [1, 0, 0, 0, 1, 0, 0, 0], // Common Cold
-    [1, 1, 1, 1, 1, 0, 0, 1], // Bronchitis
-    [1, 1, 1, 1, 1, 0, 0, 1], // Pneumonia
-    [1, 1, 1, 1, 1, 0, 0, 1], // Pneumonia
-    [1, 0, 1, 0, 1, 0, 0, 1], // Asthma
-    [1, 1, 1, 1, 1, 1, 1, 1], // Possible TB
-    [1, 1, 1, 1, 1, 1, 1, 1], // Possible TB
-    [0, 0, 0, 0, 0, 0, 0, 0], // No Issue
-    [1, 1, 1, 1, 1, 1, 1, 1], // Severe Lung Infection
-    [0, 0, 0, 0, 0, 0, 0, 0]  // Mild Issue
+  [1, 0, 0, 0, 1, 0, 0, 0], // Index 0: Common Cold
+  [1, 1, 1, 1, 1, 0, 0, 1], // Index 1: Bronchitis
+  [1, 1, 1, 1, 1, 0, 0, 1], // Index 2: Pneumonia
+  [1, 1, 1, 1, 1, 0, 0, 1], // Index 3: Pneumonia
+  [1, 0, 1, 0, 1, 0, 0, 1], // Index 4: Asthma
+  [1, 1, 1, 1, 1, 1, 1, 1], // Index 5: Possible TB
+  [1, 1, 1, 1, 1, 1, 1, 1], // Index 6: Possible TB
+  [0, 0, 0, 0, 0, 0, 0, 0], // Index 7: No Issue
+  [1, 1, 1, 1, 1, 1, 1, 1], // Index 8: Severe Lung Infection
+  [0, 0, 0, 0, 0, 0, 0, 0], // Index 9: Mild Issue
 ]
 
 export const y = [
-    "Common Cold",
-    "Bronchitis",
-    "Pneumonia",
-    "Pneumonia",
-    "Asthma",
-    "Possible TB",
-    "Possible TB",
-    "No Issue",
-    "Severe Lung Infection",
-    "Mild Issue"
+  'Common Cold',
+  'Bronchitis',
+  'Pneumonia',
+  'Pneumonia',
+  'Asthma',
+  'Possible TB',
+  'Possible TB',
+  'No Issue',
+  'Severe Lung Infection',
+  'Mild Issue'
 ]
 
-export const REMEDIES = {
-    "Common Cold": [
-        "Rest and hydration",
-        "Steam inhalation",
-        "Paracetamol for fever",
-        "Warm fluids"
-    ],
-    "Bronchitis": [
-        "Avoid smoke/dust exposure",
-        "Steam inhalation",
-        "Use cough syrup",
-        "Consult doctor if persists"
-    ],
-    "Asthma": [
-        "Use inhaler (as prescribed)",
-        "Avoid triggers (dust, smoke)",
-        "Practice breathing exercises",
-        "Keep emergency inhaler ready"
-    ],
-    "Pneumonia": [
-        "Needs medical attention",
-        "Take prescribed antibiotics",
-        "Rest and fluids",
-        "Monitor breathing"
-    ],
-    "Possible TB": [
-        "URGENT: Get TB test (sputum/X-ray)",
-        "Avoid close contact with others",
-        "Proper medication required (long-term)",
-        "Government hospitals provide free TB treatment"
-    ],
-    "Severe Lung Infection": [
-        "EMERGENCY",
-        "Hospital visit immediately",
-        "Oxygen support may be needed"
-    ],
-    "No Issue": [
-        "Healthy condition",
-        "Maintain hygiene"
-    ],
-    "Mild Issue": [
-        "Basic care",
-        "Monitor symptoms"
+/* ── 3. Dataset Metadata (Remedies, Warnings) ──────────── */
+export const DATA_META = {
+  'Common Cold': {
+    severity: 'mild',
+    severityLabel: '✓ Mild',
+    remedies: [
+      "Rest and hydration",
+      "Steam inhalation",
+      "Paracetamol for fever",
+      "Warm fluids"
     ]
+  },
+  'Bronchitis': {
+    severity: 'moderate',
+    severityLabel: '⚠️ Moderate',
+    remedies: [
+      "Avoid smoke/dust exposure",
+      "Steam inhalation",
+      "Use cough syrup",
+      "Consult doctor if persists"
+    ]
+  },
+  'Asthma': {
+    severity: 'serious',
+    severityLabel: '🆘 Serious',
+    remedies: [
+      "Use inhaler (as prescribed)",
+      "Avoid triggers (dust, smoke)",
+      "Practice breathing exercises",
+      "Keep emergency inhaler ready"
+    ],
+    managementLabel: "MANAGEMENT"
+  },
+  'Pneumonia': {
+    severity: 'serious',
+    severityLabel: '🆘 Serious',
+    remedies: [
+      "Needs medical attention",
+      "Take prescribed antibiotics",
+      "Rest and fluids",
+      "Monitor breathing"
+    ],
+    criticalWarning: "Serious lung condition — do not ignore"
+  },
+  'Possible TB': {
+    severity: 'critical',
+    severityLabel: '🆘 Critical',
+    remedies: [
+      "URGENT: Get TB test (sputum/X-ray)",
+      "Avoid close contact with others",
+      "Proper medication required (long-term)",
+      "Government hospitals provide free TB treatment"
+    ],
+    criticalWarning: "Chronic cough + weight loss → TB suspicion. Early testing is very important."
+  },
+  'Severe Lung Infection': {
+    severity: 'critical',
+    severityLabel: '🆘 EMERGENCY',
+    remedies: [
+      "Hospital visit immediately",
+      "Oxygen support may be needed",
+      "Monitor vital signs"
+    ],
+    criticalWarning: "Serious lung condition — do not ignore"
+  },
+  'No Issue': {
+    severity: 'mild',
+    severityLabel: '✓ Healthy',
+    remedies: [
+      "Healthy condition",
+      "Maintain hygiene"
+    ]
+  },
+  'Mild Issue': {
+    severity: 'mild',
+    severityLabel: '✓ Mild',
+    remedies: [
+      "Basic care",
+      "Monitor symptoms"
+    ]
+  }
 }
 
-/**
- * Computes the Hamming distance between two equal-length binary arrays.
- */
+/* ── 4. Prediction function ────────────────────────────── */
 function hammingDistance(a, b) {
   let dist = 0
   for (let i = 0; i < a.length; i++) {
@@ -98,36 +134,36 @@ function hammingDistance(a, b) {
   return dist
 }
 
-/**
- * Predicts the most likely lungs-related condition given the user's symptom vector.
- */
 export function predictDisease(userInput) {
   let minDist = Infinity
-  let bestIndex = 0
+  let possibleIndices = []
 
   X.forEach((row, i) => {
     const dist = hammingDistance(userInput, row)
     if (dist < minDist) {
       minDist = dist
-      bestIndex = i
+      possibleIndices = [i]
+    } else if (dist === minDist) {
+      possibleIndices.push(i)
     }
   })
 
-  // To match tie-breaking (e.g. Bronchitis vs Pneumonia, TB vs Severe Infection), 
-  // keeping the first met index generally aligns with standard tree behavior at depth 
-  // but if multiple duplicate rows exist, the dataset natively has duplicate features resolving arbitrarily.
-  const disease = y[bestIndex]
-  const remedies = REMEDIES[disease] ?? ["Consult doctor"]
-  
-  let remedyText = remedies.map(r => "- " + r).join("\n")
+  // Prioritize critical results in case of ties
+  const results = possibleIndices.map(idx => y[idx])
+  const prioritized = results.includes('Severe Lung Infection') ? 'Severe Lung Infection' :
+                      results.includes('Possible TB') ? 'Possible TB' :
+                      results.includes('Pneumonia') ? 'Pneumonia' :
+                      results[0]
 
-  // Additional warnings based on user python file
-  if (disease === "Pneumonia" || disease === "Severe Lung Infection") {
-      remedyText += "\n\nWARNING:\nSerious lung condition — do not ignore."
-  }
-  if (disease === "Possible TB") {
-      remedyText += "\n\nIMPORTANT:\nChronic cough + weight loss → TB suspicion. Early testing is very important."
-  }
+  const disease = prioritized
+  const meta = DATA_META[disease]
 
-  return { disease, remedy: remedyText }
+  return { 
+    disease, 
+    remedies: meta.remedies || ["Consult a doctor for accurate diagnosis."], 
+    severity: meta.severity, 
+    severityLabel: meta.severityLabel,
+    criticalWarning: meta.criticalWarning || null,
+    managementLabel: meta.managementLabel || null
+  }
 }
