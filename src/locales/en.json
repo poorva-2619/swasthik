@@ -447,5 +447,13 @@
   "hccc_no_symptoms_desc": "No temperature-related symptoms reported. Stay properly dressed for the weather!",
   "bleeding_checker_title": "Bleeding Checker",
   "bleeding_checker_badge": "💉 Bleeding · Symptom",
-  "bcd_no_symptoms_desc": "You haven't reported any bleeding instances. Keep a first-aid kit handy!"
+  "bcd_no_symptoms_desc": "You haven't reported any bleeding instances. Keep a first-aid kit handy!",
+  "ph_back": "← Back",
+  "ph_title": "Patient History",
+  "ph_years": "years",
+  "ph_loading": "Loading history...",
+  "ph_empty": "No diagnosis records found for this patient.",
+  "ph_symptoms": "Symptoms:",
+  "ph_diagnosis": "Diagnosis:",
+  "ph_na": "N/A"
 }

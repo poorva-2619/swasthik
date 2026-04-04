@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import './PatientHistory.css';
 
 export default function PatientHistory({ patient, onBack }) {
+  const { t } = useLanguage();
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -20,21 +22,21 @@ export default function PatientHistory({ patient, onBack }) {
   return (
     <div className="ph-wrapper">
       <div className="ph-header">
-        <button className="ph-back-btn" onClick={onBack}>← Back</button>
-        <h1 className="ph-title">Patient History</h1>
+        <button className="ph-back-btn" onClick={onBack}>{t('ph_back') || '← Back'}</button>
+        <h1 className="ph-title">{t('ph_title') || 'Patient History'}</h1>
       </div>
 
       <div className="ph-user-info">
         <h3>{patient.name}</h3>
-        <p>{patient.age} years • {patient.gender}</p>
+        <p>{patient.age} {t('ph_years') || 'years'} • {t(`gender_${patient.gender.toLowerCase()}`) === `gender_${patient.gender.toLowerCase()}` ? patient.gender : t(`gender_${patient.gender.toLowerCase()}`)}</p>
       </div>
 
       {loading ? (
-        <p>Loading history...</p>
+        <p>{t('ph_loading') || 'Loading history...'}</p>
       ) : (
         <div className="ph-list">
           {records.length === 0 ? (
-            <p className="ph-empty">No diagnosis records found for this patient.</p>
+            <p className="ph-empty">{t('ph_empty') || 'No diagnosis records found for this patient.'}</p>
           ) : (
             records.map(r => (
               <div key={r._id} className="ph-card">
@@ -42,10 +44,10 @@ export default function PatientHistory({ patient, onBack }) {
                   {new Date(r.timestamp).toLocaleString()}
                 </div>
                 <div className="ph-card-symptoms">
-                  <strong>Symptoms:</strong> {r.symptoms?.join(', ') || 'N/A'}
+                  <strong>{t('ph_symptoms') || 'Symptoms:'}</strong> {r.symptoms?.join(', ') || t('ph_na') || 'N/A'}
                 </div>
                 <div className="ph-card-result">
-                  <strong>Diagnosis:</strong> {r.diagnosis_result}
+                  <strong>{t('ph_diagnosis') || 'Diagnosis:'}</strong> {r.diagnosis_result}
                 </div>
               </div>
             ))

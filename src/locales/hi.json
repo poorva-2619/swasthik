@@ -459,5 +459,13 @@
   "symp_severe_dizziness,_weakness,_or_pale_skin": "गंभीर चक्कर आना, कमजोरी या त्वचा का पीला पड़ना",
   "disease_severe_hemorrhage_/_trauma": "गंभीर रक्तस्राव / आघात",
   "disease_gastrointestinal_(internal)_bleeding": "आंतरिक रक्तस्राव (पेट/आंतों में)",
-  "disease_possible_bleeding_disorder": "संभावित रक्तस्राव विकार (Bleeding Disorder)"
+  "disease_possible_bleeding_disorder": "संभावित रक्तस्राव विकार (Bleeding Disorder)",
+  "ph_back": "← पीछे",
+  "ph_title": "मरीज का इतिहास",
+  "ph_years": "वर्ष",
+  "ph_loading": "इतिहास लोड हो रहा है...",
+  "ph_empty": "इस मरीज के लिए कोई निदान रिकॉर्ड नहीं मिला।",
+  "ph_symptoms": "लक्षण:",
+  "ph_diagnosis": "निदान:",
+  "ph_na": "उपलब्ध नहीं"
 }
