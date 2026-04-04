@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useLanguage } from '../context/LanguageContext'
 import './InjuryChecker.css'
 import { SYMPTOMS, predictDisease } from './injuryModel'
 
@@ -10,6 +11,7 @@ const NO_ICON  = '✗'
    RESULT SCREEN
    ═══════════════════════════════════════════════════════════ */
 function ResultScreen({ answers, onRestart, onBack }) {
+  const { t } = useLanguage()
   const allZero = answers.every(a => a === 0)
 
   /* ── No-symptom edge case ──────────────────────────────── */
@@ -18,27 +20,26 @@ function ResultScreen({ answers, onRestart, onBack }) {
       <div className="ic-result-wrapper">
         <div className="ic-result-header">
           <button className="ic-back-btn" onClick={onBack} aria-label="Go back">
-            ← Back
+            {t('hc_back_cat')}
           </button>
-          <span className="ic-title">Assessment Result</span>
+          <span className="ic-title">{t('injury_checker_title')}</span>
         </div>
 
         <div className="ic-result-card" style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '2.8rem', marginBottom: '14px' }}>🛡️</div>
-          <div className="ic-result-disease">No Major Injury Reported</div>
+          <div className="ic-result-disease">{t('hc_no_symptoms')}</div>
           <div className="ic-divider" />
           <p className="ic-remedy-text">
-            You haven't reported any severe symptoms. If the person is stable, keep observing them for any changes.
-            If they feel discomfort later, visit a local health centre.
+            {t('remedy_injury_no_symptoms')}
           </p>
         </div>
 
         <div className="ic-result-actions">
           <button className="ic-restart-btn" onClick={onRestart}>
-            🔄 Try Again
+            {t('hc_try_again')}
           </button>
           <button className="ic-home-btn" onClick={onBack}>
-            ← Back to Categories
+            {t('hc_back_cat')}
           </button>
         </div>
       </div>
@@ -46,7 +47,15 @@ function ResultScreen({ answers, onRestart, onBack }) {
   }
 
   /* ── Standard result ───────────────────────────────────── */
-  const { disease, remedies, severity, severityLabel, criticalWarning, cprSteps } = predictDisease(answers)
+  const { disease, severity } = predictDisease(answers)
+  
+  const sevKey = {
+    'critical': 'sev_critical',
+    'serious': 'sev_serious_consult',
+    'moderate': 'sev_moderate',
+    'mild': 'sev_mild'
+  }[severity] || 'sev_moderate';
+
   const presentSymptoms = SYMPTOMS.filter((_, i) => answers[i] === 1)
   const absentSymptoms  = SYMPTOMS.filter((_, i) => answers[i] === 0)
 
@@ -56,67 +65,37 @@ function ResultScreen({ answers, onRestart, onBack }) {
       {/* Header */}
       <div className="ic-result-header">
         <button className="ic-back-btn" onClick={onBack} aria-label="Go back">
-          ← Back
+          {t('sc_back')}
         </button>
-        <span className="ic-title">Assessment Result</span>
+        <span className="ic-title">{t('hc_result_title')}</span>
       </div>
-
-      {/* Critical Warning (if any) */}
-      {criticalWarning && (
-        <div className="ic-warning-box">
-          <span className="ic-warning-icon">🚨</span>
-          <div className="ic-warning-content">
-            <h4 className="ic-warning-title">CRITICAL WARNING</h4>
-            <p className="ic-warning-desc">{criticalWarning}</p>
-          </div>
-        </div>
-      )}
 
       {/* Diagnosis card */}
       <div className="ic-result-card">
-        <div className="ic-result-label">Potential Condition</div>
-        <div className="ic-result-disease">{disease}</div>
+        <div className="ic-result-label">{t('nc_predicted_cond')}</div>
+        <div className="ic-result-disease">{t(`disease_${disease.toLowerCase().replace(/\s|\(|\)/g, '_')}`)}</div>
 
         {/* Severity chip */}
         <span className={`ic-severity-chip ${severity}`}>
-          {severityLabel}
+          {t(sevKey)}
         </span>
 
         <div className="ic-divider" />
 
         {/* Remedy List */}
-        <div className="ic-remedy-label">Essential First Aid</div>
-        <ul className="ic-remedy-list">
-          {remedies.map((r, i) => (
-            <li key={i} className="ic-remedy-item">{r}</li>
-          ))}
-        </ul>
+        <div className="ic-remedy-label">{t('nc_action_plan')}</div>
+        <p className="ic-remedy-text" style={{ whiteSpace: 'pre-line' }}>{t(`remedy_injury_${disease.toLowerCase().replace(/\s|\(|\)/g, '_')}`)}</p>
       </div>
-
-      {/* CPR Basic Guide (if any) */}
-      {cprSteps && (
-        <div className="ic-cpr-box">
-          <div className="ic-cpr-header">
-            <span className="ic-cpr-icon">👐</span>
-            <span className="ic-cpr-title">CPR BASIC GUIDE</span>
-          </div>
-          <ol className="ic-cpr-list">
-            {cprSteps.map((step, i) => (
-              <li key={i} className="ic-cpr-step">{step}</li>
-            ))}
-          </ol>
-        </div>
-      )}
 
       {/* Symptom summary */}
       <div className="ic-symptom-summary">
-        <div className="ic-symptom-summary-title">Summary of Symptoms</div>
+        <div className="ic-symptom-summary-title">{t('hc_your_symptoms')}</div>
         <div className="ic-symptom-pills">
           {presentSymptoms.map(s => (
-            <span key={s} className="ic-symptom-pill present">{s}</span>
+            <span key={s} className="ic-symptom-pill present">{t(`symp_${s.toLowerCase().replace(/\s|\(|\)/g, '_')}`)}</span>
           ))}
           {absentSymptoms.map(s => (
-            <span key={s} className="ic-symptom-pill absent">{s}</span>
+            <span key={s} className="ic-symptom-pill absent">{t(`symp_${s.toLowerCase().replace(/\s|\(|\)/g, '_')}`)}</span>
           ))}
         </div>
       </div>
@@ -124,10 +103,10 @@ function ResultScreen({ answers, onRestart, onBack }) {
       {/* Actions */}
       <div className="ic-result-actions">
         <button className="ic-restart-btn" onClick={onRestart}>
-          🔄 Retake Quiz
+          {t('hc_try_again')}
         </button>
         <button className="ic-home-btn" onClick={onBack}>
-          ← Back to Categories
+          {t('hc_back_cat')}
         </button>
       </div>
 
@@ -139,6 +118,7 @@ function ResultScreen({ answers, onRestart, onBack }) {
    QUIZ SCREEN  ──────────────────────────────────────────────
    ═══════════════════════════════════════════════════════════ */
 export default function InjuryChecker({ onBack }) {
+  const { t } = useLanguage()
   const total = SYMPTOMS.length
 
   const [answers, setAnswers]     = useState(Array(total).fill(null))
@@ -204,15 +184,15 @@ export default function InjuryChecker({ onBack }) {
           onClick={step === 0 ? onBack : goPrev}
           aria-label={step === 0 ? 'Back' : 'Previous question'}
         >
-          ← {step === 0 ? 'Back' : 'Prev'}
+          {step === 0 ? t('sc_back') : t('hc_prev')}
         </button>
-        <span className="ic-title">Shock & Burns</span>
+        <span className="ic-title">{t('injury_checker_title')}</span>
       </div>
 
       <div className="ic-progress-wrap" role="progressbar">
         <div className="ic-progress-label">
-          <span>Question {step + 1} of {total}</span>
-          <span>{Math.round(progress)}%</span>
+          <span>{t('hc_q')} {step + 1} {t('hc_of')} {total}</span>
+          <span>{Math.round(progress)}{t('hc_complete')}</span>
         </div>
         <div className="ic-progress-track">
           <div className="ic-progress-fill" style={{ width: `${progress}%` }} />
@@ -221,11 +201,11 @@ export default function InjuryChecker({ onBack }) {
 
       <div className="ic-card" key={slideKey}>
         <div className="ic-symptom-badge">
-          ⚡ Burns & Shock · Step {step + 1}
+          {t('injury_checker_badge')} {step + 1}
         </div>
 
         <p className="ic-question">
-          Is there any <strong>{SYMPTOMS[step]}</strong>?
+          {t('hc_do_you_have')} <strong>{t(`symp_${SYMPTOMS[step].toLowerCase().replace(/\s|\(|\)/g, '_')}`)}</strong>?
         </p>
 
         <div className="ic-choices">
@@ -234,7 +214,7 @@ export default function InjuryChecker({ onBack }) {
             onClick={() => handleChoice(1)}
           >
             <span className="ic-choice-icon">{YES_ICON}</span>
-            Yes
+            {t('hc_yes')}
           </button>
 
           <button
@@ -242,18 +222,18 @@ export default function InjuryChecker({ onBack }) {
             onClick={() => handleChoice(0)}
           >
             <span className="ic-choice-icon">{NO_ICON}</span>
-            No
+            {t('hc_no')}
           </button>
         </div>
       </div>
 
       <div className="ic-nav">
         <button className="ic-nav-btn" onClick={goPrev} disabled={step === 0}>
-          ← Prev
+          {t('hc_prev')}
         </button>
 
         <button className="ic-next-btn" onClick={goNext} disabled={!canProceed}>
-          {isLastSlide ? 'Get Result →' : 'Next →'}
+          {isLastSlide ? t('hc_see_results') : t('hc_next')}
         </button>
       </div>
 

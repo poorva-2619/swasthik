@@ -1,18 +1,20 @@
+import { useLanguage } from '../context/LanguageContext'
 import './Dashboard.css'
 
 export default function Dashboard({ user, onBack, onCheckSymptoms, onNearbyClinic, onHistoryClick }) {
+  const { t } = useLanguage()
   return (
     <div className="db-wrapper">
 
       {/* ── Header ──────────────────────────────────────────── */}
       <div className="db-header">
         <button id="db-back-btn" className="db-back-btn" onClick={onBack} aria-label="Go back">
-          ← Back
+          {t('db_back')}
         </button>
-        <h1 className="db-title">Hi, {user?.name?.split(' ')[0] || 'there'} 👋</h1>
+        <h1 className="db-title">{t('db_hi')} {user?.name?.split(' ')[0] || t('db_there')} 👋</h1>
       </div>
 
-      <p className="db-subtitle">What would you like to do today?</p>
+      <p className="db-subtitle">{t('db_subtitle')}</p>
 
       {/* ── Two Action Cards ─────────────────────────────────── */}
       <div className="db-grid" role="region" aria-label="Main actions">
@@ -26,9 +28,9 @@ export default function Dashboard({ user, onBack, onCheckSymptoms, onNearbyClini
         >
           <div className="db-card-glow db-card-glow--green" aria-hidden="true" />
           <span className="db-card-icon" aria-hidden="true">🩺</span>
-          <h2 className="db-card-title">Check Symptoms</h2>
+          <h2 className="db-card-title">{t('db_check_symp')}</h2>
           <p className="db-card-desc">
-            Answer a few questions and get instant health guidance based on your symptoms.
+            {t('db_check_symp_desc')}
           </p>
           <div className="db-card-bar db-card-bar--green" aria-hidden="true" />
         </button>
@@ -42,9 +44,9 @@ export default function Dashboard({ user, onBack, onCheckSymptoms, onNearbyClini
         >
           <div className="db-card-glow db-card-glow--blue" aria-hidden="true" />
           <span className="db-card-icon" aria-hidden="true">🏥</span>
-          <h2 className="db-card-title">Nearby Clinic</h2>
+          <h2 className="db-card-title">{t('db_nearby')}</h2>
           <p className="db-card-desc">
-            Locate the nearest PHC, hospital, or health centre in your area.
+            {t('db_nearby_desc')}
           </p>
           <div className="db-card-bar db-card-bar--blue" aria-hidden="true" />
         </button>
@@ -58,9 +60,9 @@ export default function Dashboard({ user, onBack, onCheckSymptoms, onNearbyClini
         >
           <div className="db-card-glow db-card-glow--amber" aria-hidden="true" />
           <span className="db-card-icon" aria-hidden="true">📜</span>
-          <h2 className="db-card-title">View History</h2>
+          <h2 className="db-card-title">{t('db_history')}</h2>
           <p className="db-card-desc">
-            Check your previous diagnoses and symptoms.
+            {t('db_history_desc')}
           </p>
           <div className="db-card-bar db-card-bar--amber" aria-hidden="true" />
         </button>
@@ -72,7 +74,7 @@ export default function Dashboard({ user, onBack, onCheckSymptoms, onNearbyClini
         <div className="db-user-pill" aria-label="Logged in user details">
           <span className="db-user-avatar">👤</span>
           <span className="db-user-info">
-            {user.name} · {user.age} yrs · {user.gender} · {user.locality}
+            {user.name} · {user.age} {t('db_yrs')} · {t(`gender_${user.gender?.toLowerCase()?.replace(/\s+/g, '_')}`)} · {user.locality}
           </span>
         </div>
       )}

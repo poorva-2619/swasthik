@@ -20,6 +20,13 @@ import SkinChecker from './pages/SkinChecker'
 import BoneChecker from './pages/BoneChecker'
 import InjuryChecker from './pages/InjuryChecker'
 import CommonChecker from './pages/CommonChecker'
+import EarChecker from './pages/EarChecker'
+import MouthChecker from './pages/MouthChecker'
+import ChestChecker from './pages/ChestChecker'
+import HeatColdChecker from './pages/HeatColdChecker'
+import BleedingChecker from './pages/BleedingChecker'
+import { useLanguage } from './context/LanguageContext'
+
 /* ─── Language data ─────────────────────────────────────── */
 const LANGUAGES = [
   { code: 'en',  label: 'English',  script: 'English' },
@@ -32,7 +39,7 @@ const LANGUAGES = [
 ]
 
 export default function App() {
-  const [selectedLang, setSelectedLang] = useState('en')
+  const { currentLang, setCurrentLang, t } = useLanguage()
   const [page, setPage] = useState('home')
   const [currentUser, setCurrentUser] = useState(null)
   const [currentPatient, setCurrentPatient] = useState(null)
@@ -165,6 +172,11 @@ export default function App() {
           else if (cat.id === 'heart') setPage('heart-checker')
           else if (cat.id === 'nose') setPage('nose-checker')
           else if (cat.id === 'skin') setPage('skin-checker')
+          else if (cat.id === 'ears') setPage('ear-checker')
+          else if (cat.id === 'mouth') setPage('mouth-checker')
+          else if (cat.id === 'chest') setPage('chest-checker')
+          else if (cat.id === 'heat-cold') setPage('heat-cold-checker')
+          else if (cat.id === 'bleeding') setPage('bleeding-checker')
           else handleMockDiagnosis(cat)
         }}
       />
@@ -267,26 +279,66 @@ export default function App() {
     )
   }
 
+  if (page === 'ear-checker') {
+    return (
+      <EarChecker
+        onBack={() => setPage('symptom-categories')}
+      />
+    )
+  }
+
+  if (page === 'mouth-checker') {
+    return (
+      <MouthChecker
+        onBack={() => setPage('symptom-categories')}
+      />
+    )
+  }
+
+  if (page === 'chest-checker') {
+    return (
+      <ChestChecker
+        onBack={() => setPage('symptom-categories')}
+      />
+    )
+  }
+
+  if (page === 'heat-cold-checker') {
+    return (
+      <HeatColdChecker
+        onBack={() => setPage('symptom-categories')}
+      />
+    )
+  }
+
+  if (page === 'bleeding-checker') {
+    return (
+      <BleedingChecker
+        onBack={() => setPage('symptom-categories')}
+      />
+    )
+  }
+
   return (
     <main className="app-wrapper" role="main">
 
       {/* ── Hero / Brand ──────────────────────────────────── */}
-      <section className="hero" aria-label="Swasth brand">
+      <section className="hero" aria-label={t('app_name') + " brand"}>
         <div className="logo-ring" aria-hidden="true">
           <span className="logo-icon">🌿</span>
         </div>
 
-        <h1 className="app-name">Swasth</h1>
-        <p className="app-tagline">Your Rural Health Assistant</p>
+        <h1 className="app-name">{t('app_name')}</h1>
+        <p className="app-tagline">{t('app_tagline')}</p>
         <p className="app-desc">
-          Get instant symptom-based health guidance –<br />
-          offline, free, and in your language.
+          {t('app_desc_1')}<br />
+          {t('app_desc_2')}
         </p>
 
         <div className="feature-badges" aria-label="Key features">
-          <span className="badge"><span>✓</span> Free</span>
-          <span className="badge"><span>⚡</span> Offline</span>
-          <span className="badge"><span>🔒</span> Private</span>
+          <span className="badge"><span>✓</span> {t('badge_free')}</span>
+          <span className="badge"><span>⚡</span> {t('badge_offline')}</span>
+          <span className="badge"><span>🔒</span> {t('badge_private')}</span>
         </div>
       </section>
 
@@ -294,7 +346,7 @@ export default function App() {
       <div className="card" role="region" aria-labelledby="lang-label">
         <div className="section-label" id="lang-label">
           <span className="globe-icon">🌐</span>
-          Select your language
+          {t('lang_select')}
         </div>
 
         <div className="lang-grid" role="group" aria-label="Language options">
@@ -302,9 +354,9 @@ export default function App() {
             <button
               key={lang.code}
               id={`lang-btn-${lang.code}`}
-              className={`lang-btn${selectedLang === lang.code ? ' active' : ''}`}
-              onClick={() => setSelectedLang(lang.code)}
-              aria-pressed={selectedLang === lang.code}
+              className={`lang-btn${currentLang === lang.code ? ' active' : ''}`}
+              onClick={() => setCurrentLang(lang.code)}
+              aria-pressed={currentLang === lang.code}
               aria-label={lang.label}
             >
               {lang.script}
@@ -318,22 +370,22 @@ export default function App() {
       <button
         id="check-symptoms-btn"
         className="cta-btn"
-        aria-label="Start"
+        aria-label={t('btn_start')}
         onClick={() => setPage('auth')}
       >
         <span className="cta-icon">🩺</span>
-        Start
+        {t('btn_start')}
       </button>
 
       {/* ── Quick Actions ─────────────────────────────────── */}
       <div className="quick-grid" role="region" aria-label="Quick actions">
-        <button id="health-tips-btn" className="quick-card" aria-label="Health Tips" onClick={() => setPage('health-tips')}>
+        <button id="health-tips-btn" className="quick-card" aria-label={t('quick_health_tips')} onClick={() => setPage('health-tips')}>
           <span className="quick-icon">💡</span>
-          <span className="quick-label">Health Tips</span>
+          <span className="quick-label">{t('quick_health_tips')}</span>
         </button>
-        <button id="find-clinic-btn" className="quick-card" aria-label="Find Clinic" onClick={handleFindClinicWithLocation} disabled={isLocating}>
+        <button id="find-clinic-btn" className="quick-card" aria-label={t('quick_find_clinic')} onClick={handleFindClinicWithLocation} disabled={isLocating}>
           <span className="quick-icon">{isLocating ? '⏳' : '🏥'}</span>
-          <span className="quick-label">{isLocating ? 'Locating...' : 'Find Clinic'}</span>
+          <span className="quick-label">{isLocating ? t('quick_locating') : t('quick_find_clinic')}</span>
         </button>
       </div>
 
@@ -343,19 +395,19 @@ export default function App() {
           id="ambulance-btn"
           href="tel:108"
           className="emg-btn"
-          aria-label="Call 108 – Free Ambulance"
+          aria-label={t('emg_ambulance')}
         >
           <span className="emg-icon">📞</span>
-          108 – Free Ambulance
+          {t('emg_ambulance')}
         </a>
         <a
           id="emergency-btn"
           href="tel:112"
           className="emg-btn"
-          aria-label="Call 112 – Emergency"
+          aria-label={t('emg_emergency')}
         >
           <span className="emg-icon">🚨</span>
-          112 – Emergency
+          {t('emg_emergency')}
         </a>
       </div>
 

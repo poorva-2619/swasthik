@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import './PatientSelection.css';
 
 export default function PatientSelection({ user, onBack, onSelectPatient, onAddNew }) {
+  const { t } = useLanguage();
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,20 +27,20 @@ export default function PatientSelection({ user, onBack, onSelectPatient, onAddN
   return (
     <div className="ps-wrapper">
       <div className="ps-header">
-        <button className="ps-back-btn" onClick={onBack}>← Back</button>
-        <h1 className="ps-title">Select Patient</h1>
+        <button className="ps-back-btn" onClick={onBack}>{t('ps_back')}</button>
+        <h1 className="ps-title">{t('ps_title')}</h1>
       </div>
 
       <div className="ps-user-info">
-        Logged in as: <strong>{maskContactNo(user?.contact_no)}</strong>
+        {t('ps_logged_in')} <strong>{maskContactNo(user?.contact_no)}</strong>
       </div>
 
       {loading ? (
-        <p>Loading profiles...</p>
+        <p>{t('ps_loading')}</p>
       ) : (
         <div className="ps-list">
           {patients.length === 0 ? (
-            <p className="ps-empty">No patient profiles found. Please add one.</p>
+            <p className="ps-empty">{t('ps_empty')}</p>
           ) : (
             patients.map(p => (
               <button 
@@ -49,7 +51,7 @@ export default function PatientSelection({ user, onBack, onSelectPatient, onAddN
                 <div className="ps-card-icon">👤</div>
                 <div className="ps-card-info">
                   <h3>{p.name}</h3>
-                  <p>{p.age} years • {p.gender}</p>
+                  <p>{p.age} {t('ps_years')} • {p.gender}</p>
                 </div>
                 <div className="ps-card-arrow">→</div>
               </button>
@@ -59,7 +61,7 @@ export default function PatientSelection({ user, onBack, onSelectPatient, onAddN
       )}
 
       <button className="ps-add-btn" onClick={onAddNew}>
-        <span>+</span> Add New Patient Profile
+        <span>+</span> {t('ps_add_btn')}
       </button>
     </div>
   );

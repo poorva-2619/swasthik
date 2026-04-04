@@ -1,16 +1,20 @@
 import { useState } from 'react'
 import { useLanguage } from '../context/LanguageContext'
-import './MensChecker.css'
-import { SYMPTOMS, predictCondition } from './mensModel'
+import './MouthChecker.css'
+import { SYMPTOMS, predictDisease } from './mouthModel'
 
 /* ── Severity metadata per predicted disease ─────────────── */
 const SEVERITY = {
-  'Normal Menstrual Pain': { level: 'mild',      labelKey: 'sev_mild'                    },
-  'Heavy Periods':         { level: 'moderate',   labelKey: 'sev_moderate'                },
-  'PMS':                   { level: 'mild',       labelKey: 'sev_mild'                    },
-  'Irregular Periods':     { level: 'moderate',   labelKey: 'sev_moderate'                },
-  'Possible PCOS':         { level: 'attention',  labelKey: 'sev_serious_consult'         },
-  'Mild Discomfort':       { level: 'mild',       labelKey: 'sev_mild'                    },
+  'Mouth Ulcers': { level: 'mild', labelKey: 'sev_mild' },
+  'Aphthous Ulcer': { level: 'moderate', labelKey: 'sev_moderate' },
+  'Severe Ulcer': { level: 'serious', labelKey: 'sev_serious' },
+  'Vitamin Deficiency Ulcer': { level: 'moderate', labelKey: 'sev_moderate' },
+  'Tooth Decay': { level: 'moderate', labelKey: 'sev_moderate' },
+  'Gingivitis': { level: 'mild', labelKey: 'sev_mild' },
+  'Periodontitis': { level: 'serious', labelKey: 'sev_serious' },
+  'Oral Infection': { level: 'serious', labelKey: 'sev_serious' },
+  'Cavity': { level: 'moderate', labelKey: 'sev_moderate' },
+  'Healthy': { level: 'mild', labelKey: 'sev_mild' }
 }
 
 /* ── Icons shown on Yes / No buttons ────────────────────── */
@@ -30,26 +34,26 @@ function ResultScreen({ answers, onRestart, onBack }) {
       <div className="mc-result-wrapper">
         <div className="mc-result-header">
           <button className="mc-back-btn" onClick={onBack} aria-label="Go back">
-            {t('hc_back_cat')}
+            {t('hc_back_cat') || '← Back to Categories'}
           </button>
-          <span className="mc-title">{t('mens_checker_title')}</span>
+          <span className="mc-title">{t('mouth_checker_title') || 'Mouth Checker'}</span>
         </div>
 
         <div className="mc-result-card" style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '2.8rem', marginBottom: '14px' }}>😊</div>
-          <div className="mc-result-disease">{t('hc_no_symptoms')}</div>
+          <div style={{ fontSize: '2.8rem', marginBottom: '14px' }}>🦷</div>
+          <div className="mc-result-disease">{t('hc_no_symptoms') || 'No Symptoms Detected'}</div>
           <div className="mc-divider" />
-          <p className="mc-remedy-item" style={{ justifyContent: 'center' }}>
-            {t('remedy_mens_no_symptoms')}
+          <p className="mc-remedy-text">
+            {t('mouthc_no_symptoms_desc') || "You haven't reported any significant mouth symptoms. Keep up the good oral hygiene, brush twice a day, and visit your dentist for regular checkups."}
           </p>
         </div>
 
         <div className="mc-result-actions">
           <button className="mc-restart-btn" onClick={onRestart}>
-            {t('hc_try_again')}
+            {t('hc_try_again') || '🔄 Retake Quiz'}
           </button>
           <button className="mc-home-btn" onClick={onBack}>
-            {t('hc_back_cat')}
+            {t('hc_back_cat') || '← Back to Categories'}
           </button>
         </div>
       </div>
@@ -57,7 +61,7 @@ function ResultScreen({ answers, onRestart, onBack }) {
   }
 
   /* ── Standard result ───────────────────────────────────── */
-  const { disease } = predictCondition(answers)
+  const { disease, remedy, warning } = predictDisease(answers)
   const sev = SEVERITY[disease] ?? { level: 'moderate', labelKey: 'sev_moderate' }
   const presentSymptoms = SYMPTOMS.filter((_, i) => answers[i] === 1)
   const absentSymptoms  = SYMPTOMS.filter((_, i) => answers[i] === 0)
@@ -68,42 +72,56 @@ function ResultScreen({ answers, onRestart, onBack }) {
       {/* Header */}
       <div className="mc-result-header">
         <button className="mc-back-btn" onClick={onBack} aria-label="Go back">
-          {t('sc_back')}
+          {t('sc_back') || '← Back'}
         </button>
-        <span className="mc-title">{t('hc_result_title')}</span>
+        <span className="mc-title">{t('hc_result_title') || 'Your Result'}</span>
       </div>
 
       {/* Diagnosis card */}
       <div className="mc-result-card">
-        <div className="mc-result-label">{t('nc_predicted_cond')}</div>
-        <div className="mc-result-disease">{t(`disease_${disease.toLowerCase().replace(/\s+/g, '_')}`)}</div>
+        <div className="mc-result-label">{t('hc_possible_cond') || 'Possible Condition'}</div>
+        <div className="mc-result-disease">
+           {t(`disease_${disease.toLowerCase().replace(/\s+/g, '_')}`) === `disease_${disease.toLowerCase().replace(/\s+/g, '_')}` 
+              ? disease 
+              : t(`disease_${disease.toLowerCase().replace(/\s+/g, '_')}`)}
+        </div>
 
         {/* Severity chip */}
         <span className={`mc-severity-chip ${sev.level}`}>
-           {t(sev.labelKey)}
+          {t(sev.labelKey) || sev.level}
         </span>
 
         <div className="mc-divider" />
 
-        {/* Remedies */}
-        <div className="mc-remedies-label">{t('nc_action_plan')}</div>
-        <p className="mc-remedy-item" style={{ whiteSpace: 'pre-line' }}>
-          {t(`remedy_mens_${disease.toLowerCase().replace(/\s+/g, '_')}`)}
+        {/* Remedy */}
+        <div className="mc-remedy-label">{t('hc_sug_action') || 'Suggested Action'}</div>
+        <p className="mc-remedy-text">
+          {remedy}
+          {warning && (
+            <>
+              <br /><br />
+              <strong style={{ color: 'var(--red-primary)' }}>{warning}</strong>
+            </>
+          )}
         </p>
       </div>
 
       {/* Symptom summary */}
       <div className="mc-symptom-summary">
-        <div className="mc-symptom-summary-title">{t('hc_your_symptoms')}</div>
+        <div className="mc-symptom-summary-title">{t('hc_your_symptoms') || 'Your Symptoms'}</div>
         <div className="mc-symptom-pills">
           {presentSymptoms.map(s => (
-            <span key={s.key} className="mc-symptom-pill present">
-              {t(`symp_${s.key}`)}
+            <span key={s} className="mc-symptom-pill present">
+               {t(`symp_${s.toLowerCase().replace(/\s+/g, '_')}`) === `symp_${s.toLowerCase().replace(/\s+/g, '_')}` 
+                  ? s 
+                  : t(`symp_${s.toLowerCase().replace(/\s+/g, '_')}`)}
             </span>
           ))}
           {absentSymptoms.map(s => (
-            <span key={s.key} className="mc-symptom-pill absent">
-              {t(`symp_${s.key}`)}
+            <span key={s} className="mc-symptom-pill absent">
+               {t(`symp_${s.toLowerCase().replace(/\s+/g, '_')}`) === `symp_${s.toLowerCase().replace(/\s+/g, '_')}` 
+                  ? s 
+                  : t(`symp_${s.toLowerCase().replace(/\s+/g, '_')}`)}
             </span>
           ))}
         </div>
@@ -112,10 +130,10 @@ function ResultScreen({ answers, onRestart, onBack }) {
       {/* Actions */}
       <div className="mc-result-actions">
         <button className="mc-restart-btn" onClick={onRestart}>
-          {t('hc_try_again')}
+          {t('hc_try_again') || '🔄 Retake Quiz'}
         </button>
         <button className="mc-home-btn" onClick={onBack}>
-          {t('hc_back_cat')}
+          {t('hc_back_cat') || '← Back to Categories'}
         </button>
       </div>
 
@@ -126,16 +144,16 @@ function ResultScreen({ answers, onRestart, onBack }) {
 /* ═══════════════════════════════════════════════════════════
    QUIZ SCREEN  (one symptom slide at a time)
    ═══════════════════════════════════════════════════════════ */
-export default function MensChecker({ onBack }) {
+export default function MouthChecker({ onBack }) {
   const { t } = useLanguage()
-  const total = SYMPTOMS.length                    // 8
+  const total = SYMPTOMS.length
 
   // answers[i] = null (not yet answered) | 0 (No) | 1 (Yes)
-  const [answers, setAnswers]       = useState(Array(total).fill(null))
-  const [step, setStep]             = useState(0)
+  const [answers, setAnswers]     = useState(Array(total).fill(null))
+  const [step, setStep]           = useState(0)
   const [showResult, setShowResult] = useState(false)
   // slideKey forces CSS re-animation when slide changes
-  const [slideKey, setSlideKey]     = useState(0)
+  const [slideKey, setSlideKey]   = useState(0)
 
   /* ── Handlers ──────────────────────────────────────────── */
   function handleChoice(value) {
@@ -151,8 +169,6 @@ export default function MensChecker({ onBack }) {
       setStep(s => s + 1)
       setSlideKey(k => k + 1)
     } else {
-      // Final slide → show result
-      // Any remaining null treated as 0 (no symptom)
       setAnswers(prev => prev.map(a => (a === null ? 0 : a)))
       setShowResult(true)
     }
@@ -200,17 +216,17 @@ export default function MensChecker({ onBack }) {
           onClick={step === 0 ? onBack : goPrev}
           aria-label={step === 0 ? 'Back to categories' : 'Previous question'}
         >
-          {step === 0 ? t('sc_back') : t('hc_prev')}
+          {step === 0 ? (t('sc_back') || '← Back') : (t('hc_prev') || '← Prev')}
         </button>
-        <span className="mc-title">{t('mens_checker_title')}</span>
+        <span className="mc-title">{t('mouth_checker_title') || 'Mouth Checker'}</span>
       </div>
 
       {/* Progress bar */}
       <div className="mc-progress-wrap" role="progressbar"
            aria-valuenow={step + 1} aria-valuemin={1} aria-valuemax={total}>
         <div className="mc-progress-label">
-          <span>{t('hc_q')} {step + 1} {t('hc_of')} {total}</span>
-          <span>{Math.round(progress)}{t('hc_complete')}</span>
+          <span>{(t('hc_q') || 'Question')} {step + 1} {(t('hc_of') || 'of')} {total}</span>
+          <span>{Math.round(progress)}% {(t('hc_complete') || 'complete')}</span>
         </div>
         <div className="mc-progress-track">
           <div className="mc-progress-fill" style={{ width: `${progress}%` }} />
@@ -221,12 +237,17 @@ export default function MensChecker({ onBack }) {
       <div className="mc-card" key={slideKey}>
         {/* Symptom badge */}
         <div className="mc-symptom-badge">
-          {t('mens_checker_badge')} {step + 1}
+          {(t('mouth_checker_badge') || '🦷 Mouth · Symptom')} {step + 1}
         </div>
 
         {/* Question */}
         <p className="mc-question">
-          {t('hc_do_you_have')} <strong>{t(`symp_${SYMPTOMS[step].key}`)}</strong>?
+          {(t('hc_do_you_have') || 'Do you have')}{' '}
+          <strong>
+             {t(`symp_${SYMPTOMS[step].toLowerCase().replace(/\s+/g, '_')}`) === `symp_${SYMPTOMS[step].toLowerCase().replace(/\s+/g, '_')}`
+                 ? SYMPTOMS[step]
+                 : t(`symp_${SYMPTOMS[step].toLowerCase().replace(/\s+/g, '_')}`)}
+          </strong>?
         </p>
 
         {/* Yes / No */}
@@ -238,7 +259,7 @@ export default function MensChecker({ onBack }) {
             aria-pressed={current === 1}
           >
             <span className="mc-choice-icon">{YES_ICON}</span>
-            {t('hc_yes')}
+            {t('hc_yes') || 'Yes'}
           </button>
 
           <button
@@ -248,7 +269,7 @@ export default function MensChecker({ onBack }) {
             aria-pressed={current === 0}
           >
             <span className="mc-choice-icon">{NO_ICON}</span>
-            {t('hc_no')}
+            {t('hc_no') || 'No'}
           </button>
         </div>
       </div>
@@ -261,7 +282,7 @@ export default function MensChecker({ onBack }) {
           disabled={step === 0}
           aria-label="Previous question"
         >
-          {t('hc_prev')}
+          {t('hc_prev') || '← Prev'}
         </button>
 
         <button
@@ -270,7 +291,7 @@ export default function MensChecker({ onBack }) {
           disabled={!canProceed}
           aria-label={isLastSlide ? 'See results' : 'Next question'}
         >
-          {isLastSlide ? t('hc_see_results') : t('hc_next')}
+          {isLastSlide ? (t('hc_see_results') || 'See Results →') : (t('hc_next') || 'Next →')}
         </button>
       </div>
 

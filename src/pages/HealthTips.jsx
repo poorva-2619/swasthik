@@ -1,96 +1,39 @@
+import { useLanguage } from '../context/LanguageContext'
 import './HealthTips.css'
 
 /* ─── Data ──────────────────────────────────────────────── */
-const TIPS = [
-  {
-    id: 'wash-hands',
-    icon: '🧼',
-    title: 'Wash Hands Regularly',
-    desc: 'Use soap for at least 20 seconds. Prevents most infections.',
-    accent: '#a855f7',   // purple
-  },
-  {
-    id: 'clean-water',
-    icon: '💧',
-    title: 'Drink Clean Water',
-    desc: 'Always boil or purify water before drinking.',
-    accent: '#3b82f6',   // blue
-  },
-  {
-    id: 'sleep',
-    icon: '😴',
-    title: 'Sleep 7–8 Hours',
-    desc: 'Good sleep strengthens immunity naturally.',
-    accent: '#f59e0b',   // amber
-  },
-  {
-    id: 'iron-foods',
-    icon: '🥬',
-    title: 'Eat Iron-Rich Foods',
-    desc: 'Spinach, jaggery, lentils prevent anaemia.',
-    accent: '#22c55e',   // green
-  },
-  {
-    id: 'mosquito-nets',
-    icon: '🦟',
-    title: 'Use Mosquito Nets',
-    desc: 'Prevent malaria, dengue, chikungunya.',
-    accent: '#ef4444',   // red
-  },
-  {
-    id: 'vaccinate',
-    icon: '💉',
-    title: 'Vaccinate Children',
-    desc: 'Follow immunisation schedule regularly.',
-    accent: '#60a5fa',   // sky-blue
-  },
-  {
-    id: 'ors',
-    icon: '🥤',
-    title: 'ORS for Diarrhoea',
-    desc: '6 tsp sugar + 1 tsp salt in 1 litre water.',
-    accent: '#f97316',   // orange
-  },
-  {
-    id: 'sun',
-    icon: '🌞',
-    title: 'Sun Protection',
-    desc: 'Wear a hat and stay hydrated in summer.',
-    accent: '#eab308',   // yellow
-  },
-]
-
-const SEASONS = [
-  {
-    id: 'summer',
-    icon: '🟡',
-    label: 'Summer',
-    tips: 'Stay hydrated. Drink raw mango panna. Avoid 12–4 PM sun. Use ORS if sweating heavily.',
-  },
-  {
-    id: 'monsoon',
-    icon: '🔵',
-    label: 'Monsoon',
-    tips: 'Boil all water. Use mosquito nets. Avoid street food. Watch for fever after mosquito bites.',
-  },
-  {
-    id: 'winter',
-    icon: '❄️',
-    label: 'Winter',
-    tips: 'Keep warm especially children. Cover mouth/nose. Steam inhalation for congestion.',
-  },
-]
+// Moved to inside component to allow 't' hook usage
 
 /* ─── Component ─────────────────────────────────────────── */
 export default function HealthTips({ onBack }) {
+  const { t } = useLanguage()
+
+  const TIPS = [
+    { id: '1', icon: '🧼', title: t('ht_tip1_title'), desc: t('ht_tip1_desc'), accent: '#a855f7' },
+    { id: '2', icon: '💧', title: t('ht_tip2_title'), desc: t('ht_tip2_desc'), accent: '#3b82f6' },
+    { id: '3', icon: '😴', title: t('ht_tip3_title'), desc: t('ht_tip3_desc'), accent: '#f59e0b' },
+    { id: '4', icon: '🥬', title: t('ht_tip4_title'), desc: t('ht_tip4_desc'), accent: '#22c55e' },
+    { id: '5', icon: '🦟', title: t('ht_tip5_title'), desc: t('ht_tip5_desc'), accent: '#ef4444' },
+    { id: '6', icon: '💉', title: t('ht_tip6_title'), desc: t('ht_tip6_desc'), accent: '#60a5fa' },
+    { id: '7', icon: '🥤', title: t('ht_tip7_title'), desc: t('ht_tip7_desc'), accent: '#f97316' },
+    { id: '8', icon: '🌞', title: t('ht_tip8_title'), desc: t('ht_tip8_desc'), accent: '#eab308' },
+  ]
+  
+  const SEASONS = [
+    { id: '1', icon: '🟡', label: t('ht_season1_label'), tips: t('ht_season1_tips') },
+    { id: '2', icon: '🔵', label: t('ht_season2_label'), tips: t('ht_season2_tips') },
+    { id: '3', icon: '❄️', label: t('ht_season3_label'), tips: t('ht_season3_tips') },
+  ]
+
+
   return (
     <div className="ht-wrapper">
       {/* Header */}
       <div className="ht-header">
         <button id="ht-back-btn" className="ht-back-btn" onClick={onBack} aria-label="Go back">
-          ← Back
+          {t('sc_back')}
         </button>
-        <h1 className="ht-title">Health Tips</h1>
+        <h1 className="ht-title">{t('ht_page_title')}</h1>
       </div>
 
       {/* Tips grid */}
@@ -114,7 +57,7 @@ export default function HealthTips({ onBack }) {
       {/* Seasonal precautions */}
       <div className="ht-seasonal" role="region" aria-labelledby="seasonal-heading">
         <h2 className="ht-seasonal-title" id="seasonal-heading">
-          <span aria-hidden="true">📋</span> Seasonal Precautions
+          <span aria-hidden="true">📋</span> {t('ht_seasonal_title')}
         </h2>
 
         <div className="ht-season-list">

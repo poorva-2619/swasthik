@@ -1,7 +1,18 @@
 import { useState } from 'react'
 import { useLanguage } from '../context/LanguageContext'
-import './BoneChecker.css'
-import { SYMPTOMS, predictDisease } from './boneModel'
+import './BleedingChecker.css'
+import { SYMPTOMS, predictDisease } from './bleedingModel'
+
+/* ── Severity metadata per predicted disease ─────────────── */
+const SEVERITY = {
+  'Laceration (Deep Cut)': { level: 'moderate', labelKey: 'sev_moderate' },
+  'Severe Hemorrhage / Trauma': { level: 'serious', labelKey: 'sev_serious' },
+  'Epistaxis (Nosebleed)': { level: 'mild', labelKey: 'sev_mild' },
+  'Gastrointestinal (Internal) Bleeding': { level: 'serious', labelKey: 'sev_serious' },
+  'Possible Bleeding Disorder': { level: 'serious', labelKey: 'sev_serious' },
+  'Healthy': { level: 'mild', labelKey: 'sev_mild' },
+  'Uncertain / Undiagnosed': { level: 'moderate', labelKey: 'sev_moderate' }
+}
 
 /* ── Icons shown on Yes / No buttons ────────────────────── */
 const YES_ICON = '✓'
@@ -20,26 +31,26 @@ function ResultScreen({ answers, onRestart, onBack }) {
       <div className="bc-result-wrapper">
         <div className="bc-result-header">
           <button className="bc-back-btn" onClick={onBack} aria-label="Go back">
-            {t('hc_back_cat')}
+            {t('hc_back_cat') || '← Back to Categories'}
           </button>
-          <span className="bc-title">{t('bone_checker_title')}</span>
+          <span className="bc-title">{t('bleeding_checker_title') || 'Bleeding Checker'}</span>
         </div>
 
         <div className="bc-result-card" style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '2.8rem', marginBottom: '14px' }}>🦴</div>
-          <div className="bc-result-disease">{t('hc_no_symptoms')}</div>
+          <div style={{ fontSize: '2.8rem', marginBottom: '14px' }}>💉</div>
+          <div className="bc-result-disease">{t('hc_no_symptoms') || 'No Symptoms Detected'}</div>
           <div className="bc-divider" />
           <p className="bc-remedy-text">
-            {t('remedy_bone_no_symptoms')}
+            {t('bcd_no_symptoms_desc') || "You haven't reported any bleeding instances. Keep a first-aid kit handy just in case!"}
           </p>
         </div>
 
         <div className="bc-result-actions">
           <button className="bc-restart-btn" onClick={onRestart}>
-            {t('hc_try_again')}
+            {t('hc_try_again') || '🔄 Retake Quiz'}
           </button>
           <button className="bc-home-btn" onClick={onBack}>
-            {t('hc_back_cat')}
+            {t('hc_back_cat') || '← Back to Categories'}
           </button>
         </div>
       </div>
@@ -47,19 +58,13 @@ function ResultScreen({ answers, onRestart, onBack }) {
   }
 
   /* ── Standard result ───────────────────────────────────── */
-  const { disease, severity } = predictDisease(answers)
-  
-  // Mapping severity string from model ('critical', 'serious', 'moderate', 'mild')
-  // to the generalized severity labels.
-  const sevKey = {
-    'critical': 'sev_critical',
-    'serious': 'sev_serious_consult',
-    'moderate': 'sev_moderate',
-    'mild': 'sev_mild'
-  }[severity] || 'sev_moderate';
-
+  const { disease, remedy, warning, confidence } = predictDisease(answers)
+  const sev = SEVERITY[disease] ?? { level: 'moderate', labelKey: 'sev_moderate' }
   const presentSymptoms = SYMPTOMS.filter((_, i) => answers[i] === 1)
   const absentSymptoms  = SYMPTOMS.filter((_, i) => answers[i] === 0)
+
+  // Confidence is an explicit feature of the Bleeding module
+  const confidencePercent = Math.round(confidence * 100);
 
   return (
     <div className="bc-result-wrapper">
@@ -67,37 +72,64 @@ function ResultScreen({ answers, onRestart, onBack }) {
       {/* Header */}
       <div className="bc-result-header">
         <button className="bc-back-btn" onClick={onBack} aria-label="Go back">
-          {t('sc_back')}
+          {t('sc_back') || '← Back'}
         </button>
-        <span className="bc-title">{t('hc_result_title')}</span>
+        <span className="bc-title">{t('hc_result_title') || 'Your Result'}</span>
       </div>
 
       {/* Diagnosis card */}
       <div className="bc-result-card">
-        <div className="bc-result-label">{t('nc_predicted_cond')}</div>
-        <div className="bc-result-disease">{t(`disease_${disease.toLowerCase().replace(/\s|\(|\)/g, '_')}`)}</div>
+        <div className="bc-result-label">{t('hc_possible_cond') || 'Possible Condition'}</div>
+        <div className="bc-result-disease">
+           {t(`disease_${disease.toLowerCase().replace(/\s+/g, '_')}`) === `disease_${disease.toLowerCase().replace(/\s+/g, '_')}` 
+              ? disease 
+              : t(`disease_${disease.toLowerCase().replace(/\s+/g, '_')}`)}
+        </div>
+        
+        {/* Confidence Render Unique to Bleeding model */}
+        {disease !== 'Healthy' && (
+           <div className="bc-confidence-text">
+             Confidence / Severity Match: {confidencePercent}%
+           </div>
+        )}
 
         {/* Severity chip */}
-        <span className={`bc-severity-chip ${severity}`}>
-          {t(sevKey)}
+        <span className={`bc-severity-chip ${sev.level}`}>
+          {t(sev.labelKey) || sev.level}
         </span>
 
         <div className="bc-divider" />
 
         {/* Remedy */}
-        <div className="bc-remedy-label">{t('nc_action_plan')}</div>
-        <p className="bc-remedy-text" style={{ whiteSpace: 'pre-line' }}>{t(`remedy_bone_${disease.toLowerCase().replace(/\s|\(|\)/g, '_')}`)}</p>
+        <div className="bc-remedy-label">{t('hc_sug_action') || 'First Aid & Suggested Steps'}</div>
+        <p className="bc-remedy-text">
+          {remedy}
+          {warning && (
+            <>
+              <br /><br />
+              <strong style={{ color: 'var(--red-primary)' }}>{warning}</strong>
+            </>
+          )}
+        </p>
       </div>
 
       {/* Symptom summary */}
       <div className="bc-symptom-summary">
-        <div className="bc-symptom-summary-title">{t('hc_your_symptoms')}</div>
+        <div className="bc-symptom-summary-title">{t('hc_your_symptoms') || 'Your Symptoms'}</div>
         <div className="bc-symptom-pills">
           {presentSymptoms.map(s => (
-            <span key={s} className="bc-symptom-pill present">{t(`symp_${s.toLowerCase().replace(/\s|\(|\)/g, '_')}`)}</span>
+            <span key={s} className="bc-symptom-pill present">
+               {t(`symp_${s.toLowerCase().replace(/\s+/g, '_')}`) === `symp_${s.toLowerCase().replace(/\s+/g, '_')}` 
+                  ? s 
+                  : t(`symp_${s.toLowerCase().replace(/\s+/g, '_')}`)}
+            </span>
           ))}
           {absentSymptoms.map(s => (
-            <span key={s} className="bc-symptom-pill absent">{t(`symp_${s.toLowerCase().replace(/\s|\(|\)/g, '_')}`)}</span>
+            <span key={s} className="bc-symptom-pill absent">
+               {t(`symp_${s.toLowerCase().replace(/\s+/g, '_')}`) === `symp_${s.toLowerCase().replace(/\s+/g, '_')}` 
+                  ? s 
+                  : t(`symp_${s.toLowerCase().replace(/\s+/g, '_')}`)}
+            </span>
           ))}
         </div>
       </div>
@@ -105,10 +137,10 @@ function ResultScreen({ answers, onRestart, onBack }) {
       {/* Actions */}
       <div className="bc-result-actions">
         <button className="bc-restart-btn" onClick={onRestart}>
-          {t('hc_try_again')}
+          {t('hc_try_again') || '🔄 Retake Quiz'}
         </button>
         <button className="bc-home-btn" onClick={onBack}>
-          {t('hc_back_cat')}
+          {t('hc_back_cat') || '← Back to Categories'}
         </button>
       </div>
 
@@ -119,7 +151,7 @@ function ResultScreen({ answers, onRestart, onBack }) {
 /* ═══════════════════════════════════════════════════════════
    QUIZ SCREEN  (one symptom slide at a time)
    ═══════════════════════════════════════════════════════════ */
-export default function BoneChecker({ onBack }) {
+export default function BleedingChecker({ onBack }) {
   const { t } = useLanguage()
   const total = SYMPTOMS.length
 
@@ -127,6 +159,7 @@ export default function BoneChecker({ onBack }) {
   const [answers, setAnswers]     = useState(Array(total).fill(null))
   const [step, setStep]           = useState(0)
   const [showResult, setShowResult] = useState(false)
+  // slideKey forces CSS re-animation when slide changes
   const [slideKey, setSlideKey]   = useState(0)
 
   /* ── Handlers ──────────────────────────────────────────── */
@@ -162,6 +195,7 @@ export default function BoneChecker({ onBack }) {
     setShowResult(false)
   }
 
+  /* ── Result screen ─────────────────────────────────────── */
   if (showResult) {
     const finalAnswers = answers.map(a => (a === null ? 0 : a))
     return (
@@ -173,7 +207,8 @@ export default function BoneChecker({ onBack }) {
     )
   }
 
-  const current     = answers[step]
+  /* ── Quiz screen ───────────────────────────────────────── */
+  const current     = answers[step]           // null | 0 | 1
   const canProceed  = current !== null
   const isLastSlide = step === total - 1
   const progress    = ((step + (canProceed ? 1 : 0)) / total) * 100
@@ -181,72 +216,100 @@ export default function BoneChecker({ onBack }) {
   return (
     <div className="bc-wrapper">
 
+      {/* Header */}
       <div className="bc-header">
         <button
           className="bc-back-btn"
           onClick={step === 0 ? onBack : goPrev}
           aria-label={step === 0 ? 'Back to categories' : 'Previous question'}
         >
-          {step === 0 ? t('sc_back') : t('hc_prev')}
+          {step === 0 ? (t('sc_back') || '← Back') : (t('hc_prev') || '← Prev')}
         </button>
-        <span className="bc-title">{t('bone_checker_title')}</span>
+        <span className="bc-title">{t('bleeding_checker_title') || 'Bleeding Checker'}</span>
       </div>
 
-      <div className="bc-progress-wrap" role="progressbar">
+      {/* Progress bar */}
+      <div className="bc-progress-wrap" role="progressbar"
+           aria-valuenow={step + 1} aria-valuemin={1} aria-valuemax={total}>
         <div className="bc-progress-label">
-          <span>{t('hc_q')} {step + 1} {t('hc_of')} {total}</span>
-          <span>{Math.round(progress)}{t('hc_complete')}</span>
+          <span>{(t('hc_q') || 'Question')} {step + 1} {(t('hc_of') || 'of')} {total}</span>
+          <span>{Math.round(progress)}% {(t('hc_complete') || 'complete')}</span>
         </div>
         <div className="bc-progress-track">
           <div className="bc-progress-fill" style={{ width: `${progress}%` }} />
         </div>
       </div>
 
+      {/* Question card — key re-mounts on every slide change to replay animation */}
       <div className="bc-card" key={slideKey}>
+        {/* Symptom badge */}
         <div className="bc-symptom-badge">
-          {t('bone_checker_badge')} {step + 1}
+          {(t('bleeding_checker_badge') || '💉 Bleed · Symptom')} {step + 1}
         </div>
 
+        {/* Question */}
         <p className="bc-question">
-          {t('hc_do_you_have')} <strong>{t(`symp_${SYMPTOMS[step].toLowerCase().replace(/\s|\(|\)/g, '_')}`)}</strong>?
+          {(t('hc_do_you_have') || 'Do you have')}{' '}
+          <strong>
+             {t(`symp_${SYMPTOMS[step].toLowerCase().replace(/\s+/g, '_')}`) === `symp_${SYMPTOMS[step].toLowerCase().replace(/\s+/g, '_')}`
+                 ? SYMPTOMS[step]
+                 : t(`symp_${SYMPTOMS[step].toLowerCase().replace(/\s+/g, '_')}`)}
+          </strong>?
         </p>
 
+        {/* Yes / No */}
         <div className="bc-choices">
           <button
+            id={`bc-yes-${step}`}
             className={`bc-choice-btn yes${current === 1 ? ' selected' : ''}`}
             onClick={() => handleChoice(1)}
+            aria-pressed={current === 1}
           >
             <span className="bc-choice-icon">{YES_ICON}</span>
-            {t('hc_yes')}
+            {t('hc_yes') || 'Yes'}
           </button>
 
           <button
+            id={`bc-no-${step}`}
             className={`bc-choice-btn no${current === 0 ? ' selected' : ''}`}
             onClick={() => handleChoice(0)}
+            aria-pressed={current === 0}
           >
             <span className="bc-choice-icon">{NO_ICON}</span>
-            {t('hc_no')}
+            {t('hc_no') || 'No'}
           </button>
         </div>
       </div>
 
+      {/* Bottom nav */}
       <div className="bc-nav">
-        <button className="bc-nav-btn" onClick={goPrev} disabled={step === 0}>
-          {t('hc_prev')}
+        <button
+          className="bc-nav-btn"
+          onClick={goPrev}
+          disabled={step === 0}
+          aria-label="Previous question"
+        >
+          {t('hc_prev') || '← Prev'}
         </button>
 
-        <button className="bc-next-btn" onClick={goNext} disabled={!canProceed}>
-          {isLastSlide ? t('hc_see_results') : t('hc_next')}
+        <button
+          className="bc-next-btn"
+          onClick={goNext}
+          disabled={!canProceed}
+          aria-label={isLastSlide ? 'See results' : 'Next question'}
+        >
+          {isLastSlide ? (t('hc_see_results') || 'See Results →') : (t('hc_next') || 'Next →')}
         </button>
       </div>
 
-      <div className="bc-dots">
+      {/* Dot indicators */}
+      <div className="bc-dots" aria-hidden="true">
         {Array.from({ length: total }).map((_, i) => (
           <span
             key={i}
             className={
               'bc-dot' +
-              (i === step ? ' current' : '') +
+              (i === step        ? ' current'  : '') +
               (answers[i] !== null && i !== step ? ' answered' : '')
             }
           />

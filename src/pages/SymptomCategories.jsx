@@ -1,3 +1,4 @@
+import { useLanguage } from '../context/LanguageContext'
 import './SymptomCategories.css'
 
 /* ── Category data ───────────────────────────────────────── */
@@ -23,6 +24,8 @@ const CATEGORIES = [
 ]
 
 export default function SymptomCategories({ onBack, onSelect }) {
+  const { t } = useLanguage()
+
   return (
     <div className="sc-wrapper">
 
@@ -34,12 +37,12 @@ export default function SymptomCategories({ onBack, onSelect }) {
           onClick={onBack}
           aria-label="Go back"
         >
-          ← Back
+          {t('sc_back')}
         </button>
-        <h1 className="sc-title">Check Symptoms</h1>
+        <h1 className="sc-title">{t('sc_title')}</h1>
       </div>
 
-      <p className="sc-subtitle">Select a category to identify your symptoms</p>
+      <p className="sc-subtitle">{t('sc_subtitle')}</p>
 
       {/* ── Cards Grid ──────────────────────────────────────── */}
       <div className="sc-grid" role="list" aria-label="Symptom categories">
@@ -62,7 +65,7 @@ export default function SymptomCategories({ onBack, onSelect }) {
             </div>
 
             {/* Label */}
-            <span className="sc-label">{cat.label}</span>
+            <span className="sc-label">{t(`cat_${cat.id.replace(/-/g, '_')}`)}</span>
 
             {/* Accent bar */}
             <div className="sc-bar" aria-hidden="true" />

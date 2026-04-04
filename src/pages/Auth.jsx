@@ -1,14 +1,16 @@
 import { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import './Auth.css';
 
 export default function Auth({ onBack, onLogin }) {
+  const { t } = useLanguage();
   const [contactNo, setContactNo] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleProceed = async () => {
     if (!contactNo || contactNo.length < 10) {
-      setError('Please enter a valid 10-digit number');
+      setError(t('auth_err_invalid'));
       return;
     }
     setLoading(true);
@@ -23,10 +25,10 @@ export default function Auth({ onBack, onLogin }) {
       if (response.ok) {
         onLogin(data.user);
       } else {
-        setError(data.error || 'Authentication failed');
+        setError(data.error || t('auth_err_failed'));
       }
     } catch (err) {
-      setError('Could not connect to server. Is MongoDB running?');
+      setError(t('auth_err_network'));
     } finally {
       setLoading(false);
     }
@@ -35,18 +37,18 @@ export default function Auth({ onBack, onLogin }) {
   return (
     <div className="auth-wrapper">
       <div className="auth-header">
-        <button className="auth-back-btn" onClick={onBack}>← Back</button>
-        <h1 className="auth-title">Login / Register</h1>
+        <button className="auth-back-btn" onClick={onBack}>{t('auth_back')}</button>
+        <h1 className="auth-title">{t('auth_title')}</h1>
       </div>
       
       <p className="auth-subtitle">
-        Enter your mobile number to view past records or create patient profiles.
+        {t('auth_subtitle')}
       </p>
 
       <div className="auth-form">
         <div className="auth-field">
           <label className="auth-label" htmlFor="contact-no">
-            <span className="auth-label-icon">📱</span> Mobile Number
+            <span className="auth-label-icon">📱</span> {t('auth_mobile_label')}
           </label>
           <div className="phone-input-group">
             <span className="phone-prefix">+91</span>
@@ -54,7 +56,7 @@ export default function Auth({ onBack, onLogin }) {
               id="contact-no"
               className={`auth-input ${error ? 'auth-input--error' : ''}`}
               type="text"
-              placeholder="e.g. 9876543210"
+              placeholder={t('auth_placeholder')}
               value={contactNo}
               onChange={e => setContactNo(e.target.value.replace(/\D/g, ''))}
               maxLength="10"
@@ -70,7 +72,7 @@ export default function Auth({ onBack, onLogin }) {
         disabled={loading}
       >
         <span className="auth-proceed-icon">{loading ? '⏳' : '🔓'}</span>
-        {loading ? 'Authenticating...' : 'Sign In'}
+        {loading ? t('auth_btn_loading') : t('auth_btn_signin')}
       </button>
     </div>
   );

@@ -1,7 +1,9 @@
 import React from 'react';
+import { useLanguage } from '../context/LanguageContext';
 import './NearbyClinic.css';
 
 export default function NearbyClinic({ user, userLocation, onBack }) {
+  const { t } = useLanguage();
   // Construct a Google Maps search URL based on facility type and user locality or coordinates
   const getMapUrl = (facility) => {
     // If we have precise GPS coordinates
@@ -15,20 +17,20 @@ export default function NearbyClinic({ user, userLocation, onBack }) {
   };
 
   const facilities = [
-    { name: 'Primary Health Centre (PHC)', icon: '🏥' },
-    { name: 'Community Health Centre (CHC)', icon: '🏥' }, // Using hospital emoji for CHC as per screenshot roughly
-    { name: 'District Hospital', icon: '🏛️' },
-    { name: 'AYUSH / Ayurvedic Centre', icon: '🌿' },
-    { name: 'ASHA Worker', icon: '👩‍⚕️' }
+    { name: t('ncl_phc'), icon: '🏥' },
+    { name: t('ncl_chc'), icon: '🏥' },
+    { name: t('ncl_district'), icon: '🏛️' },
+    { name: t('ncl_ayush'), icon: '🌿' },
+    { name: t('ncl_asha'), icon: '👩‍⚕️' }
   ];
 
   const helplines = [
-    { number: '108', label: 'Free Ambulance', icon: '🚑', borderColor: 'border-red-light' },
-    { number: '112', label: 'Emergency Services', icon: '🚨', borderColor: 'border-red' },
-    { number: '104', label: 'Health Helpline', icon: '📞', borderColor: 'border-pink' },
-    { number: '1098', label: 'Child Helpline', icon: '👶', borderColor: 'border-indigo' },
-    { number: '181', label: 'Women Helpline', icon: '👩', borderColor: 'border-purple' },
-    { number: '1800-180-1104', label: 'Mental Health (NIMHANS)', icon: '🧠', borderColor: 'border-indigo' }
+    { number: '108', label: t('ncl_free_amb'), icon: '🚑', borderColor: 'border-red-light' },
+    { number: '112', label: t('ncl_emerg_services'), icon: '🚨', borderColor: 'border-red' },
+    { number: '104', label: t('ncl_health_helpline'), icon: '📞', borderColor: 'border-pink' },
+    { number: '1098', label: t('ncl_child_helpline'), icon: '👶', borderColor: 'border-indigo' },
+    { number: '181', label: t('ncl_women_helpline'), icon: '👩', borderColor: 'border-purple' },
+    { number: '1800-180-1104', label: t('ncl_mental_health'), icon: '🧠', borderColor: 'border-indigo' }
   ];
 
   return (
@@ -37,14 +39,14 @@ export default function NearbyClinic({ user, userLocation, onBack }) {
       {/* Header */}
       <div className="nc-header">
         <button className="nc-back-btn" onClick={onBack} aria-label="Go back">
-          ← Back
+          {t('sc_back')}
         </button>
-        <h1 className="nc-title">Find Nearby Clinic</h1>
+        <h1 className="nc-title">{t('ncl_page_title')}</h1>
       </div>
 
       {/* Facilities Section */}
       <section className="nc-section" aria-label="Government Health Facilities">
-        <h2 className="nc-section-title">Government Health Facilities (Free)</h2>
+        <h2 className="nc-section-title">{t('ncl_gov_facilities')}</h2>
         
         <div className="nc-facility-list">
           {facilities.map((fac, idx) => (
@@ -59,7 +61,7 @@ export default function NearbyClinic({ user, userLocation, onBack }) {
               <span className="nc-facility-icon" aria-hidden="true">{fac.icon}</span>
               <div className="nc-facility-info">
                 <span className="nc-facility-name">{fac.name}</span>
-                <span className="nc-facility-free-badge">FREE</span>
+                <span className="nc-facility-free-badge">{t('ncl_free')}</span>
               </div>
               <span className="nc-facility-arrow" aria-hidden="true">→</span>
             </a>
@@ -69,7 +71,7 @@ export default function NearbyClinic({ user, userLocation, onBack }) {
 
       {/* Emergency Helplines Section */}
       <section className="nc-section" aria-label="Emergency Helplines">
-        <h2 className="nc-section-title pinkish">📞 Emergency Helplines</h2>
+        <h2 className="nc-section-title pinkish">📞 {t('ncl_emerg_helplines')}</h2>
         
         <div className="nc-helpline-grid">
           {helplines.map((help, idx) => (
@@ -90,14 +92,14 @@ export default function NearbyClinic({ user, userLocation, onBack }) {
       {/* Did You Know Box */}
       <section className="nc-dyk-box" aria-label="Did You Know facts">
         <div className="nc-dyk-title">
-          <span aria-hidden="true">💡</span> Did You Know?
+          <span aria-hidden="true">💡</span> {t('ncl_dyk_title')}
         </div>
         <ul className="nc-dyk-list">
-          <li>Anti-rabies vaccines are available <span className="text-green-highlight">FREE</span> at government hospitals</li>
-          <li>Anti-snake venom is available <span className="text-green-highlight">FREE</span> at District Hospitals</li>
-          <li>DOTS treatment for TB is completely <span className="text-green-highlight">FREE</span></li>
-          <li>Delivery and maternal care are <span className="text-green-highlight">FREE</span> at PHC/CHC</li>
-          <li>Jan Aushadhi stores offer medicines at <span className="text-green-highlight">60-90% discounts</span></li>
+          <li>{t('ncl_dyk_1_1')} <span className="text-green-highlight">{t('ncl_dyk_1_2')}</span>{t('ncl_dyk_1_3')}</li>
+          <li>{t('ncl_dyk_2_1')} <span className="text-green-highlight">{t('ncl_dyk_2_2')}</span>{t('ncl_dyk_2_3')}</li>
+          <li>{t('ncl_dyk_3_1')} <span className="text-green-highlight">{t('ncl_dyk_3_2')}</span></li>
+          <li>{t('ncl_dyk_4_1')} <span className="text-green-highlight">{t('ncl_dyk_4_2')}</span>{t('ncl_dyk_4_3')}</li>
+          <li>{t('ncl_dyk_5_1')} <span className="text-green-highlight">{t('ncl_dyk_5_2')}</span>{t('ncl_dyk_5_3')}</li>
         </ul>
       </section>
 

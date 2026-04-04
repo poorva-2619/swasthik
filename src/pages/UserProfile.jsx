@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useLanguage } from '../context/LanguageContext'
 import './UserProfile.css'
 
 const GENDERS = ['Male', 'Female', 'Other', 'Prefer not to say']
@@ -14,6 +15,7 @@ const OCCUPATIONS = [
 ]
 
 export default function UserProfile({ user, onBack, onProceed, savedData }) {
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState(
     savedData || {
@@ -33,11 +35,11 @@ export default function UserProfile({ user, onBack, onProceed, savedData }) {
 
   const validate = () => {
     const e = {}
-    if (!form.name.trim())       e.name       = 'Please enter your name'
-    if (!form.age || form.age < 1 || form.age > 120) e.age = 'Enter a valid age (1–120)'
-    if (!form.gender)            e.gender     = 'Please select your gender'
-    if (!form.occupation)        e.occupation = 'Please select your occupation'
-    if (!form.locality.trim())   e.locality   = 'Please enter your locality'
+    if (!form.name.trim())       e.name       = t('up_err_name')
+    if (!form.age || form.age < 1 || form.age > 120) e.age = t('up_err_age')
+    if (!form.gender)            e.gender     = t('up_err_gender')
+    if (!form.occupation)        e.occupation = t('up_err_occ')
+    if (!form.locality.trim())   e.locality   = t('up_err_loc')
     return e
   }
 
@@ -63,10 +65,10 @@ export default function UserProfile({ user, onBack, onProceed, savedData }) {
       if (response.ok) {
         onProceed(data);
       } else {
-        alert(data.error || 'Failed to save patient');
+        alert(data.error || t('up_err_failed'));
       }
     } catch (err) {
-      alert('Network error. Is backend running?');
+      alert(t('up_err_network'));
     } finally {
       setLoading(false);
     }
@@ -77,13 +79,13 @@ export default function UserProfile({ user, onBack, onProceed, savedData }) {
       {/* Header */}
       <div className="up-header">
         <button id="up-back-btn" className="up-back-btn" onClick={onBack} aria-label="Go back">
-          ← Back
+          {t('up_back')}
         </button>
-        <h1 className="up-title">Your Profile</h1>
+        <h1 className="up-title">{t('up_title')}</h1>
       </div>
 
       <p className="up-subtitle">
-        Add a new patient profile to track diagnosis history.
+        {t('up_subtitle')}
       </p>
 
       <div className="up-form" role="form" aria-label="User profile form">
@@ -91,13 +93,13 @@ export default function UserProfile({ user, onBack, onProceed, savedData }) {
         {/* Name */}
         <div className="up-field">
           <label className="up-label" htmlFor="up-name">
-            <span className="up-label-icon">👤</span> Full Name
+            <span className="up-label-icon">👤</span> {t('up_name_label')}
           </label>
           <input
             id="up-name"
             className={`up-input${errors.name ? ' up-input--error' : ''}`}
             type="text"
-            placeholder="e.g. Priya Sharma"
+            placeholder={t('up_name_ph')}
             value={form.name}
             onChange={e => set('name', e.target.value)}
             autoComplete="name"
@@ -108,13 +110,13 @@ export default function UserProfile({ user, onBack, onProceed, savedData }) {
         {/* Age */}
         <div className="up-field">
           <label className="up-label" htmlFor="up-age">
-            <span className="up-label-icon">🎂</span> Age
+            <span className="up-label-icon">🎂</span> {t('up_age_label')}
           </label>
           <input
             id="up-age"
             className={`up-input${errors.age ? ' up-input--error' : ''}`}
             type="number"
-            placeholder="e.g. 28"
+            placeholder={t('up_age_ph')}
             min="1"
             max="120"
             value={form.age}
@@ -126,21 +128,25 @@ export default function UserProfile({ user, onBack, onProceed, savedData }) {
         {/* Gender */}
         <div className="up-field">
           <div className="up-label">
-            <span className="up-label-icon">⚧️</span> Gender
+            <span className="up-label-icon">⚧️</span> {t('up_gender_label')}
           </div>
           <div className="up-pill-group" role="group" aria-label="Gender options">
-            {GENDERS.map(g => (
-              <button
-                key={g}
-                id={`up-gender-${g.toLowerCase().replace(/\s+/g, '-')}`}
-                type="button"
-                className={`up-pill${form.gender === g ? ' up-pill--active' : ''}${errors.gender ? ' up-pill--err' : ''}`}
-                onClick={() => set('gender', g)}
-                aria-pressed={form.gender === g}
-              >
-                {g}
-              </button>
-            ))}
+            {GENDERS.map(g => {
+              // Convert to key: Male -> gender_male, Prefer not to say -> gender_prefer_not_to_say
+              const key = `gender_${g.toLowerCase().replace(/\s+/g, '_')}`;
+              return (
+                <button
+                  key={g}
+                  id={`up-gender-${g.toLowerCase().replace(/\s+/g, '-')}`}
+                  type="button"
+                  className={`up-pill${form.gender === g ? ' up-pill--active' : ''}${errors.gender ? ' up-pill--err' : ''}`}
+                  onClick={() => set('gender', g)}
+                  aria-pressed={form.gender === g}
+                >
+                  {t(key)}
+                </button>
+              );
+            })}
           </div>
           {errors.gender && <span className="up-error">{errors.gender}</span>}
         </div>
@@ -148,7 +154,7 @@ export default function UserProfile({ user, onBack, onProceed, savedData }) {
         {/* Occupation */}
         <div className="up-field">
           <label className="up-label" htmlFor="up-occupation">
-            <span className="up-label-icon">💼</span> Occupation
+            <span className="up-label-icon">💼</span> {t('up_occ_label')}
           </label>
           <select
             id="up-occupation"
@@ -156,10 +162,15 @@ export default function UserProfile({ user, onBack, onProceed, savedData }) {
             value={form.occupation}
             onChange={e => set('occupation', e.target.value)}
           >
-            <option value="">Select your occupation…</option>
-            {OCCUPATIONS.map(o => (
-              <option key={o} value={o}>{o}</option>
-            ))}
+            <option value="">{t('up_occ_select')}</option>
+            {OCCUPATIONS.map(o => {
+              const key = o === 'Daily Wage Worker' ? 'occ_daily_wage' 
+                         : o === 'Self-Employed' ? 'occ_self_employed'
+                         : o === 'Government Employee' ? 'occ_govt_employee'
+                         : o === 'Private Employee' ? 'occ_pvt_employee'
+                         : `occ_${o.toLowerCase()}`;
+              return <option key={o} value={o}>{t(key)}</option>;
+            })}
           </select>
           {errors.occupation && <span className="up-error">{errors.occupation}</span>}
         </div>
@@ -167,13 +178,13 @@ export default function UserProfile({ user, onBack, onProceed, savedData }) {
         {/* Locality */}
         <div className="up-field">
           <label className="up-label" htmlFor="up-locality">
-            <span className="up-label-icon">📍</span> Locality / Village / Town
+            <span className="up-label-icon">📍</span> {t('up_loc_label')}
           </label>
           <input
             id="up-locality"
             className={`up-input${errors.locality ? ' up-input--error' : ''}`}
             type="text"
-            placeholder="e.g. Rampur, Uttar Pradesh"
+            placeholder={t('up_loc_ph')}
             value={form.locality}
             onChange={e => set('locality', e.target.value)}
           />
@@ -191,7 +202,7 @@ export default function UserProfile({ user, onBack, onProceed, savedData }) {
         disabled={loading}
       >
         <span className="up-proceed-icon">{loading ? '⏳' : '🩺'}</span>
-        {loading ? 'Saving...' : 'Save Profile'}
+        {loading ? t('up_btn_saving') : t('up_btn_save')}
       </button>
     </div>
   )
