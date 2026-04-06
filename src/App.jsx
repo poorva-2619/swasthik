@@ -231,14 +231,6 @@ export default function App() {
     )
   }
 
-  if (page === 'lungs-checker') {
-    return (
-      <LungsChecker
-        onBack={() => setPage('symptom-categories')}
-      />
-    )
-  }
-
   if (page === 'stomach-checker') {
     return (
       <StomachChecker
